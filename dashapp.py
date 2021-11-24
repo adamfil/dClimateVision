@@ -9,6 +9,7 @@ from vars import VALID_DASHSET
 from vars import TOKEN
 import helper
 from datetime import datetime
+import requests
 
 
 
@@ -109,6 +110,8 @@ def update_graph(dataset_slctd, start_date_slctd, end_date_slctd, lat_slctd, lon
         Output(component_id='slct_date', component_property='end_date'),
         Output(component_id='slct_lat', component_property='placeholder'),
         Output(component_id='slct_long', component_property='placeholder'),
+        Output(component_id='slct_lat', component_property='value'),
+        Output(component_id='slct_long', component_property='value'),
     ],
     [
         Input(component_id='slct_dataset', component_property='value'),
@@ -134,7 +137,10 @@ def update_inputs(dataset_slctd):
     lat_info = 'Enter lat. Min: ' + str(lat_min) + '. Max: ' + str(lat_max) + '.'
     long_info = 'Enter long. Min: ' + str(long_min) + '. Max: ' + str(long_max) + '.'
 
-    return mindr, maxdr, mindr, maxdr, lat_info, long_info
+    lat_slctd = ''
+    long_slctd = ''
+
+    return mindr, maxdr, mindr, maxdr, lat_info, long_info, lat_slctd, long_slctd
 
 def get_lat_range(dataset: str, my_token: str):
     my_url = 'https://api.dclimate.net/apiv3/metadata/' + dataset + '?full_metadata=true'
