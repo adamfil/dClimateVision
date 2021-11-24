@@ -13,6 +13,7 @@ from datetime import datetime
 
 
 app = dash.Dash(__name__)
+server = app.server
 
 # import data
 
