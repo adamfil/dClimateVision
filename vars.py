@@ -14,8 +14,8 @@ VALID_DASHSET = []
 for set in valid_set:
 	if 'hourly' not in set:
 		VALID_DASHSET.append({'label': set, 'value': set})
-    else:
-    	pass
+  	else:
+    		pass
 
 
 
