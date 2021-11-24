@@ -1,3 +1,4 @@
+
 valid_set = ['vhi', 'prismc-tmax-daily', 'prismc-tmin-daily', 'prismc-precip-daily', 'rtma_dew_point-hourly',
              'rtma_pcp-hourly', 'rtma_temp-hourly', 'rtma_wind_u-hourly', 'rtma_wind_v-hourly', 'cpcc_precip_us-daily',
              'cpcc_precip_global-daily', 'cpcc_temp_max-daily', 'cpcc_temp_min-daily', 'chirpsc_final_05-daily',
@@ -11,12 +12,15 @@ valid_set = ['vhi', 'prismc-tmax-daily', 'prismc-tmin-daily', 'prismc-precip-dai
 VALID_DASHSET = []
 
 for set in valid_set:
-    VALID_DASHSET.append({'label': set, 'value': set})
+	if 'hourly' not in set:
+		VALID_DASHSET.append({'label': set, 'value': set})
+    else:
+    	pass
 
 
 
 
 
-TOKEN = 'REDACTED'
+TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjI1MzQwMjMwMDc5OSwiaWF0IjoxNjMwNTMwMTgwLCJzdWIiOiJhMDIzYjUwYi0wOGQ2LTQwY2QtODNiMS1iMTExZDA2Mzk1MmEifQ.qHy4B0GK22CkYOTO8gsxh0YzE8oLMMa6My8TvhwhxMk'
 
 
