@@ -1,4 +1,4 @@
-TOKEN = 'redacted'
+TOKEN = 'REDACTED'
 
 state_codes = {
   "10": "Delaware", "12": "Florida", "13": "Georgia", "15": "Hawaii", "16": "Idaho", "17": "Illinois", "18": "Indiana",
@@ -135,5 +135,16 @@ for variable in valid_german_variables:
 #'Biomass'
 # select a 1. year 2. lat/long and 3. unit
 
+#Valid Analysis Types
+valid_analysis_types = ['Histogram (exclude scatterplot)', 'Histogram (include scatterplot)']
 
+VALID_ANALYSIS_TYPES = []
 
+for set in valid_analysis_types:
+    VALID_ANALYSIS_TYPES.append({'label': set, 'value': set})
+
+#Valid Histogram Bin Sizes
+
+VALID_HISTOGRAM_BINS = [{'label': '1 day', 'value': 'D1'}, {'label': '1 week', 'value': 'W1'}, {'label': '2 weeks', 'value': 'W2'}, {'label': '1 month', 'value': 'M1'}, {'label': '2 months', 'value': 'M2'}, {'label': '3 months', 'value': 'M3'}]
+VALID_HISTOGRAM_BINS_DICT = {'1 day': 'D1', '1 week': 'W1', '2 weeks': 'W2', '1 month': 'M1', '2 months': 'M2', '3 months': 'M3'}
+#Enter histogram bin size (format "1 day"/"2 weeks"/"3 months")
