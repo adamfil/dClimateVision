@@ -4,7 +4,8 @@ import numpy as np
 import datetime
 from datetime import datetime
 from vars import TOKEN
-
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 # given a grid history dataset, a valid lat/long tuple, and an
 # authentication token, return data as series for that given lat/long
@@ -131,3 +132,171 @@ def get_station_variable_series(dataset: str, station: str, variable: str, my_to
     values = [float(s.split()[0]) if s else None for s in data.values()]
     series = pd.Series(values, index=index)
     return series
+
+
+def get_gridfile_frame(lat_slctd, long_slctd, dataset_slctd, start_date_slctd, end_date_slctd):
+
+    latlong = (lat_slctd, long_slctd)
+    data_pulled = get_gridhistory_daily_series_snapped(dataset_slctd, latlong, TOKEN)
+    dff = trim_series(data_pulled[1], start_date_slctd, end_date_slctd)
+
+    snapped_lat = str(data_pulled[0][0])
+    snapped_long = str(data_pulled[0][1])
+
+    title = 'Dataset: {}'.format(dataset_slctd) + \
+                '. Start date: {}'.format(start_date_slctd) + \
+                '. End date: {}'.format(end_date_slctd) + \
+                '. Snapped to Latitude: {}'.format(snapped_lat) + \
+                '. Snapped to Longitude: {}'.format(snapped_long)
+
+    dff = dff.to_frame(name='Value')
+    dff['Datetime'] = dff.index
+
+    return [dff, title]
+
+def get_station_frame(dataset_type_slctd, station_slctd, variable_slctd, start_date_slctd, end_date_slctd):
+
+    title = 'Dataset: {}'.format(dataset_type_slctd) + \
+                '. Station ID: {}'.format(station_slctd) + \
+                '. Weather Variable: {}'.format(variable_slctd)
+    data_pulled = get_station_variable_series(dataset_type_slctd, station_slctd, variable_slctd, TOKEN)
+    dff = trim_series(data_pulled, start_date_slctd, end_date_slctd)
+
+    dff = dff.to_frame(name='Value')
+    dff['Datetime'] = dff.index
+
+    return [dff, title]
+
+
+def make_sma_frame(frame, wind):
+    frame['Value'] = frame.rolling(window=wind).mean()
+    return frame
+
+def get_single_plot(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_date_slctd, end_date_slctd, lat_slctd, long_slctd,
+                 station_slctd, variable_slctd, anal_type,  bin_size, scatter_size, sma_size, diff_size):
+
+    info = get_graph_object_and_title(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_date_slctd, end_date_slctd, lat_slctd, long_slctd,
+                 station_slctd, variable_slctd, anal_type,  bin_size, scatter_size, sma_size, diff_size, 'Primary dataset')
+
+    go1 = info[0]
+    title = info[1]
+
+    fig = make_subplots(specs=[[{"secondary_y": False}]])
+
+    # Add traces
+    fig.add_trace(
+        go1
+    )
+
+    # Add figure title
+    fig.update_layout(
+        title_text=title
+    )
+
+    # Set x-axis title
+    fig.update_xaxes(title_text='Datetime')
+
+    # Set y-axes titles
+    fig.update_yaxes(title_text='Value')
+
+    return fig
+
+def get_double_plot(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_date_slctd, end_date_slctd, lat_slctd, long_slctd,
+                 station_slctd, variable_slctd, anal_type,  bin_size, scatter_size, sma_size, diff_size, analysis_or_raw2, dataset_type_slctd2, dataset_slctd2, start_date_slctd2, end_date_slctd2, lat_slctd2, long_slctd2,
+                 station_slctd2, variable_slctd2, anal_type2,  bin_size2, scatter_size2, sma_size2, diff_size2, second_axis):
+
+    info1 = get_graph_object_and_title(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_date_slctd, end_date_slctd, lat_slctd, long_slctd,
+                 station_slctd, variable_slctd, anal_type,  bin_size, scatter_size, sma_size, diff_size, 'Primary dataset')
+
+    info2 = get_graph_object_and_title(analysis_or_raw2, dataset_type_slctd2, dataset_slctd2, start_date_slctd2, end_date_slctd2, lat_slctd2, long_slctd2,
+                 station_slctd2, variable_slctd2, anal_type2,  bin_size2, scatter_size2, sma_size2, diff_size2, 'Secondary dataset')
+
+    go1 = info1[0]
+    title1 = info1[1]
+
+    go2 = info2[0]
+    title2 = info2[1]
+
+    if second_axis in ['Yes']:
+
+        fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+        # Add traces
+        fig.add_trace(
+            go1,
+            secondary_y=False
+        )
+
+        # Add traces
+        fig.add_trace(
+            go2,
+            secondary_y=True
+        )
+
+        # Add figure title
+        fig.update_layout(
+            title_text=title1 + title2
+        )
+
+        # Set x-axis title
+        fig.update_xaxes(title_text='Datetime')
+
+        # Set y-axes titles
+        fig.update_yaxes(title_text='Value')
+
+
+
+        return fig
+
+    if second_axis in ['No']:
+        fig = make_subplots(specs=[[{"secondary_y": False}]])
+
+        # Add traces
+        fig.add_trace(
+            go1
+        )
+
+        # Add traces
+        fig.add_trace(
+            go2
+        )
+
+        # Add figure title
+        fig.update_layout(
+            title_text=title1 + title2
+        )
+
+        # Set x-axis title
+        fig.update_xaxes(title_text='Datetime')
+
+        # Set y-axes titles
+        fig.update_yaxes(title_text='Value')
+
+        return fig
+
+def get_graph_object_and_title(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_date_slctd, end_date_slctd, lat_slctd, long_slctd,
+                 station_slctd, variable_slctd, anal_type,  bin_size, scatter_size, sma_size, diff_size, primary_or_secondary):
+
+    data = get_data(dataset_type_slctd, dataset_slctd, start_date_slctd, end_date_slctd, lat_slctd, long_slctd,
+                 station_slctd, variable_slctd)
+
+    frame = data[0]
+    title = data[1]
+
+    if analysis_or_raw in ['Raw element']:
+        go1 = go.Scatter(x=frame['Datetime'], y=frame['Value'], name=primary_or_secondary)
+
+    return go1, title
+
+def get_data(dataset_type_slctd, dataset_slctd, start_date_slctd, end_date_slctd, lat_slctd, long_slctd,
+                 station_slctd, variable_slctd):
+
+    if dataset_type_slctd in ['Grid File Dataset History']:
+        result = get_gridfile_frame(lat_slctd, long_slctd, dataset_slctd, start_date_slctd, end_date_slctd)
+
+
+    if dataset_type_slctd in ['Dutch Station History', 'CME Station History', 'German Station History']:
+        result = get_station_frame(dataset_type_slctd, station_slctd, variable_slctd, start_date_slctd,
+                                          end_date_slctd)
+
+    return result
