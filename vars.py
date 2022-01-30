@@ -136,15 +136,21 @@ for variable in valid_german_variables:
 # select a 1. year 2. lat/long and 3. unit
 
 #Valid Analysis Types
-valid_analysis_types = ['Histogram (exclude scatterplot)', 'Histogram (include scatterplot)']
+valid_analysis_types = ['Histogram - sum', 'Histogram - average', 'Interval scatterplot - sum', 'Interval scatterplot - average', 'Simple Moving Average']
 
 VALID_ANALYSIS_TYPES = []
 
 for set in valid_analysis_types:
     VALID_ANALYSIS_TYPES.append({'label': set, 'value': set})
 
-#Valid Histogram Bin Sizes
 
-VALID_HISTOGRAM_BINS = [{'label': '1 day', 'value': 'D1'}, {'label': '1 week', 'value': 'W1'}, {'label': '2 weeks', 'value': 'W2'}, {'label': '1 month', 'value': 'M1'}, {'label': '2 months', 'value': 'M2'}, {'label': '3 months', 'value': 'M3'}]
-VALID_HISTOGRAM_BINS_DICT = {'1 day': 'D1', '1 week': 'W1', '2 weeks': 'W2', '1 month': 'M1', '2 months': 'M2', '3 months': 'M3'}
-#Enter histogram bin size (format "1 day"/"2 weeks"/"3 months")
+
+#Valid scatter sizes
+VALID_SCATTERPLOT_INTERVALS = [{'label': 'Daily', 'value': 'D'}, {'label': 'Weekly', 'value': 'W'}, {'label': 'Monthly', 'value': 'M'}]
+
+#Valid Histogram Bin Sizes
+VALID_HISTOGRAM_BINS = [{'label': 'Daily', 'value': 'D'}, {'label': 'Weekly', 'value': 'W'}, {'label': 'Monthly', 'value': 'M'}]
+
+
+
+VALID_DIFF_INTERVALS = [{'label': 'Last observation', 'value': 'Last observation'}, {'label': '1 year ago', 'value': '1 year ago'}]
