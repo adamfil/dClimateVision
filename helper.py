@@ -13,7 +13,7 @@ def get_gridhistory_daily_series(dataset: str, latlong: tuple, my_token: str):
     lat = latlong[0]
     long = latlong[1]
     my_url = 'https://api.dclimate.net/apiv3/grid-history/' + dataset + '/' + str(lat) + '_' + str(long)
-    head = {"Authorization": my_token}
+    head = {"Authorization":TOKEN}
     r = requests.get(my_url, headers=head)
     data = r.json()["data"]
     index = pd.to_datetime(list(data.keys()))
@@ -25,7 +25,7 @@ def get_gridhistory_daily_series_snapped(dataset: str, latlong: tuple, my_token:
     lat = latlong[0]
     long = latlong[1]
     my_url = 'https://api.dclimate.net/apiv3/grid-history/' + dataset + '/' + str(lat) + '_' + str(long)
-    head = {"Authorization": my_token}
+    head = {"Authorization": TOKEN}
     r = requests.get(my_url, headers=head)
     data = r.json()["data"]
     index = pd.to_datetime(list(data.keys()))
@@ -52,21 +52,21 @@ def trim_series(series, start, end):
 
 def get_lat_range(dataset: str, my_token: str):
     my_url = 'https://api.dclimate.net/apiv3/metadata/' + dataset + '?full_metadata=true'
-    head = {"Authorization": my_token}
+    head = {"Authorization": TOKEN}
     r = requests.get(my_url, headers=head)
     data = r.json()['latitude range']
     return data
 
 def get_long_range(dataset: str, my_token: str):
     my_url = 'https://api.dclimate.net/apiv3/metadata/' + dataset + '?full_metadata=true'
-    head = {"Authorization": my_token}
+    head = {"Authorization": TOKEN}
     r = requests.get(my_url, headers=head)
     data = r.json()['longitude range']
     return data
 
 def get_date_range(dataset: str, my_token: str):
     my_url = 'https://api.dclimate.net/apiv3/metadata/' + dataset + '?full_metadata=true'
-    head = {"Authorization": my_token}
+    head = {"Authorization": TOKEN}
     r = requests.get(my_url, headers=head)
     if 'api documentation' in r.json().keys():
         data = r.json()['api documentation']
@@ -97,7 +97,7 @@ def get_date_range(dataset: str, my_token: str):
 
 def get_dataset_freq(dataset: str, my_token: str):
     my_url = 'https://api.dclimate.net/apiv3/metadata/' + dataset + '?full_metadata=true'
-    head = {"Authorization": my_token}
+    head = {"Authorization": TOKEN}
     r = requests.get(my_url, headers=head)
     data = r.json()
     if 'update frequency' in data.keys():
@@ -125,7 +125,7 @@ def get_station_variable_series(dataset: str, station: str, variable: str, my_to
         my_url = 'https://api.dclimate.net/apiv3/german-station-history/'
 
     my_url = my_url + station + '/' + variable
-    head = {"Authorization": my_token}
+    head = {"Authorization": TOKEN}
     r = requests.get(my_url, headers=head)
     data = r.json()["data"]
     index = pd.to_datetime(list(data.keys()))
@@ -181,6 +181,19 @@ def get_single_plot(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_da
     go1 = info[0]
     title = info[1]
 
+    analysis_title = ''
+
+    # get title
+    if analysis_or_raw == "Raw element":
+        analysis_title = ''
+    if analysis_or_raw == "Analysis of an element":
+        analysis_title = anal_type + ' '
+
+    if dataset_type_slctd == "Grid File Dataset History":
+        dataset_title = dataset_slctd
+    else:
+        dataset_title = dataset_type_slctd
+
     fig = make_subplots(specs=[[{"secondary_y": False}]])
 
     # Add traces
@@ -190,7 +203,7 @@ def get_single_plot(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_da
 
     # Add figure title
     fig.update_layout(
-        title_text=title
+        title_text=analysis_title + dataset_title
     )
 
     # Set x-axis title
@@ -217,7 +230,32 @@ def get_double_plot(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_da
     go2 = info2[0]
     title2 = info2[1]
 
-    if second_axis in ['Yes']:
+    analysis_title = ''
+    analysis_title2 = ''
+
+    #get title
+    if analysis_or_raw == "Raw element":
+        analysis_title = ''
+    if analysis_or_raw == "Analysis of an element":
+        analysis_title = anal_type + ' '
+
+    if analysis_or_raw2 == "Raw element":
+        analysis_title = ''
+    if analysis_or_raw2 == "Analysis of an element":
+        analysis_title2 = anal_type2 + ' '
+
+    if dataset_type_slctd == "Grid File Dataset History":
+        dataset_title = dataset_slctd
+    else:
+        dataset_title = dataset_type_slctd
+
+    if dataset_type_slctd2 == "Grid File Dataset History":
+        dataset_title2 = dataset_slctd2
+    else:
+        dataset_title2 = dataset_type_slctd2
+
+
+    if second_axis in ['Use secondary axis']:
 
         fig = make_subplots(specs=[[{"secondary_y": True}]])
 
@@ -235,7 +273,7 @@ def get_double_plot(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_da
 
         # Add figure title
         fig.update_layout(
-            title_text=title1 + title2
+            title_text='Primary: ' + analysis_title + dataset_title + ', Secondary: ' + analysis_title2 + dataset_title2
         )
 
         # Set x-axis title
@@ -248,7 +286,7 @@ def get_double_plot(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_da
 
         return fig
 
-    if second_axis in ['No']:
+    if second_axis in ['Use same axis']:
         fig = make_subplots(specs=[[{"secondary_y": False}]])
 
         # Add traces
@@ -263,7 +301,7 @@ def get_double_plot(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_da
 
         # Add figure title
         fig.update_layout(
-            title_text=title1 + title2
+            title_text='Primary: ' + analysis_title + dataset_title + ', Secondary: ' + analysis_title2 + dataset_title2
         )
 
         # Set x-axis title
@@ -284,7 +322,50 @@ def get_graph_object_and_title(analysis_or_raw, dataset_type_slctd, dataset_slct
     title = data[1]
 
     if analysis_or_raw in ['Raw element']:
-        go1 = go.Scatter(x=frame['Datetime'], y=frame['Value'], name=primary_or_secondary)
+        go1 = go.Scatter(x=frame['Datetime'], y=frame['Value'], name=primary_or_secondary + '')
+
+    if analysis_or_raw in ['Analysis of an element']:
+
+        if anal_type in ['Histogram - sum']:
+            result = pd.DataFrame(frame)
+
+            bucketed = result.resample(bin_size, on='Datetime').Value.sum()
+            bucketed = pd.DataFrame(bucketed, columns=['Value'])
+
+            go1 = go.Bar(x=bucketed.index, y=bucketed['Value'], name=primary_or_secondary + '')
+
+        if anal_type in ['Histogram - average']:
+            result = pd.DataFrame(frame)
+
+            bucketed = result.resample(bin_size, on='Datetime').Value.mean()
+            bucketed = pd.DataFrame(bucketed, columns=['Value'])
+
+            go1 = go.Bar(x=bucketed.index, y=bucketed['Value'], name=primary_or_secondary + '')
+
+        if anal_type in ['Interval scatterplot - sum']:
+            result = pd.DataFrame(frame)
+
+            bucketed = result.resample(scatter_size, on='Datetime').Value.sum()
+            bucketed = pd.DataFrame(bucketed, columns=['Value'])
+
+            go1 = go.Scatter(x=bucketed.index, y=bucketed['Value'], name=primary_or_secondary + '')
+
+        if anal_type in ['Interval scatterplot - average']:
+            result = pd.DataFrame(frame)
+
+            bucketed = result.resample(scatter_size, on='Datetime').Value.mean()
+            bucketed = pd.DataFrame(bucketed, columns=['Value'])
+
+            go1 = go.Scatter(x=bucketed.index, y=bucketed['Value'], name=primary_or_secondary + '')
+
+        if anal_type in ['Simple Moving Average']:
+
+            result = pd.DataFrame(frame)
+
+            window = int(sma_size)
+            result[str(window) + ' moving average'] = result['Value'].rolling(window=window).mean()
+
+            go1 = go.Scatter(x=result['Datetime'], y=result[str(window) + ' moving average'], name=primary_or_secondary + '')
 
     return go1, title
 
