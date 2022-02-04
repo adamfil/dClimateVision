@@ -1,4 +1,6 @@
 from vars import VALID_DATASET_LIST, VALID_DUTCH_STAT_LIST, VALID_CME_STAT_LIST, VALID_DUTCH_VAR_LIST, VALID_CME_VAR_LIST, VALID_GRIDFILE_LIST, VALID_SCATTERPLOT_LIST, VALID_HISTOGRAM_LIST, valid_analysis_types
+import datagetter
+import helper
 
 
 class DataQuery:
@@ -6,7 +8,7 @@ class DataQuery:
     def __init__(self, dataset_type: str, start_date: str, end_date: str, gridfile_dataset=None, lat=None, long=None, station=None, variable=None):
         # run validations on received parameters
         assert dataset_type in VALID_DATASET_LIST, f'Dataset type {dataset_type} is not a valid dataset type'
-        assert station is None or station in VALID_DUTCH_STAT_LIST or station in VALID_CME_STAT_LIST, f'Station {station} is not a valid station type'
+        assert station is None or int(station) in VALID_DUTCH_STAT_LIST or station in VALID_CME_STAT_LIST, f'Station {station} is not a valid station type'
         assert variable is None or variable in VALID_DUTCH_VAR_LIST or variable in VALID_CME_VAR_LIST, f'Variable {variable} is not a valid variable'
         assert gridfile_dataset is None or gridfile_dataset in VALID_GRIDFILE_LIST, f'Gridfile dataset {gridfile_dataset} is not a valid gridfile dataset'
         # to do, add assert lat/long.... im not sure i want to do this now, because this would use a station metadata
@@ -22,6 +24,7 @@ class DataQuery:
         self.long = long
         self.station = station
         self.variable = variable
+        self.data = DataSet(self).data
 
     def get_frequency(self):
 
@@ -30,6 +33,13 @@ class DataQuery:
     def check_query_completeness(self):
 
         pass
+
+
+class DataSet:
+
+    def __init__(self, query=DataQuery):
+        self.data = datagetter.get_data(query.dataset_type, query.gridfile_dataset, query.start_date, query.end_date, query.lat,
+                        query.long, query.station, query.variable)
 
 
 class AnalysisQuery:
@@ -58,7 +68,7 @@ class InputQuery:
                  bin_size2=None, scatter_size2=None, sma_size2=None, axis_status=None):
         # run validations on received parameters
         assert single_or_double in ['Yes', 'No'], f'{single_or_double} is an invalid single/double plot parameter. Valid parameters are "No" (single) or "Yes" (double).'
-        assert axis_status is None or axis_status in ['Use seconday axis', 'Use same axis'], f'{axis_status} is an invalid axis status parameter. Valid parameters are "Use secondary axis", "Use same axis", or None.'
+        assert axis_status is None or axis_status in ['Use secondary axis', 'Use same axis'], f'{axis_status} is an invalid axis status parameter. Valid parameters are "Use secondary axis", "Use same axis", or None.'
 
         # assign to self object
         self.single_or_double = single_or_double
@@ -69,3 +79,8 @@ class InputQuery:
         if single_or_double in ['Yes']:
             self.data_query2 = DataQuery(dataset_type2, start_date2, end_date2, gridfile_dataset2, lat2, long2, station2, variable2)
             self.analysis_query2 = AnalysisQuery(analysis_or_raw2, anal_type2, bin_size2, scatter_size2, sma_size2)
+            self.plot = helper2.get_double_plot(self)
+
+        else:
+            self.plot = helper2.get_single_plot(self)
+
