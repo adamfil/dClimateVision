@@ -1,4 +1,5 @@
 TOKEN = 'REDACTED'
+
 state_codes = {
   "10": "Delaware", "12": "Florida", "13": "Georgia", "15": "Hawaii", "16": "Idaho", "17": "Illinois", "18": "Indiana",
   "19": "Iowa", "20": "Kansas", "21": "Kentucky", "22": "Louisiana", "23": "Maine", "24": "Maryland",
@@ -151,4 +152,12 @@ VALID_SCATTERPLOT_INTERVALS = [{'label': 'Daily', 'value': 'D'}, {'label': 'Week
 #Valid Histogram Bin Sizes
 VALID_HISTOGRAM_BINS = [{'label': 'Daily', 'value': 'D'}, {'label': 'Weekly', 'value': 'W'}, {'label': 'Monthly', 'value': 'M'}]
 
+VALID_HISTOGRAM_LIST = ['D', 'W', 'M']
+
+VALID_SCATTERPLOT_LIST = ['D', 'W', 'M']
+
 VALID_DIFF_INTERVALS = [{'label': 'Last observation', 'value': 'Last observation'}, {'label': '1 year ago', 'value': '1 year ago'}]
+
+
+# to do:
+#add seondaxisorno as var
