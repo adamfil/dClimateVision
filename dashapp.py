@@ -18,6 +18,7 @@ from datetime import datetime
 import requests
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from classes import InputQuery
 
 app = dash.Dash(__name__)
 server = app.server
@@ -66,7 +67,7 @@ app.layout = html.Div(children=[
             id='datasets-to-hide',
             options=[],
             placeholder='Select a dataset',
-            value='Can you see datasets?',
+            value=None,
             style={'width': '40%'},
         )
     ], style={'display': 'block'}),
@@ -115,7 +116,7 @@ app.layout = html.Div(children=[
             id='variable-to-hide',
             options=[],
             placeholder='Select a weather variable',
-            value='Can you see variable?',
+            value=None,
             style={'width': '40%'},
         )
     ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
@@ -128,7 +129,7 @@ app.layout = html.Div(children=[
             id='station-to-hide',
             options=[],
             placeholder='Select a station id',
-            value='Can you see station id?',
+            value=None,
             style={'width': '40%'},
         )
     ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
@@ -141,7 +142,7 @@ app.layout = html.Div(children=[
             options=VALID_ANALYSIS_TYPES,
             placeholder="Select an analysis type",
             multi=False,
-            value='',
+            value=None,
             style={'width': '40%'}
         ),
     ], style={'display': 'block'}
@@ -155,7 +156,7 @@ app.layout = html.Div(children=[
             options=VALID_HISTOGRAM_BINS,
             placeholder="Select a histogram bin size",
             multi=False,
-            value='',
+            value=None,
             style={'width': '40%'}
         ),
     ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
@@ -169,7 +170,7 @@ app.layout = html.Div(children=[
             options=VALID_SCATTERPLOT_INTERVALS,
             placeholder="Select a scatterplot interval size",
             multi=False,
-            value='',
+            value=None,
             style={'width': '40%'}
         ),
     ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
@@ -195,7 +196,7 @@ app.layout = html.Div(children=[
             options=VALID_DIFF_INTERVALS,
             placeholder="Select difference interval",
             multi=False,
-            value='',
+            value=None,
             style={'width': '40%'}
         ),
     ], style={'display': 'None'}  # <-- This is the line that will be changed by the dropdown callback
@@ -251,7 +252,7 @@ app.layout = html.Div(children=[
             id='datasets-to-hide2',
             options=[],
             placeholder='Select a dataset',
-            value='Can you see datasets?',
+            value=None,
             style={'width': '40%'},
         )
     ], style={'display': 'block'}),
@@ -300,7 +301,7 @@ app.layout = html.Div(children=[
             id='variable-to-hide2',
             options=[],
             placeholder='Select a weather variable',
-            value='Can you see variable?',
+            value=None,
             style={'width': '40%'},
         )
     ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
@@ -313,7 +314,7 @@ app.layout = html.Div(children=[
             id='station-to-hide2',
             options=[],
             placeholder='Select a station id',
-            value='Can you see station id?',
+            value=None,
             style={'width': '40%'},
         )
     ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
@@ -326,7 +327,7 @@ app.layout = html.Div(children=[
             options=VALID_ANALYSIS_TYPES,
             placeholder="Select an analysis type",
             multi=False,
-            value='',
+            value=None,
             style={'width': '40%'}
         ),
     ], style={'display': 'block'}
@@ -340,7 +341,7 @@ app.layout = html.Div(children=[
             options=VALID_HISTOGRAM_BINS,
             placeholder="Select a histogram bin size",
             multi=False,
-            value='',
+            value=None,
             style={'width': '40%'}
         ),
     ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
@@ -354,7 +355,7 @@ app.layout = html.Div(children=[
             options=VALID_SCATTERPLOT_INTERVALS,
             placeholder="Select a scatterplot interval size",
             multi=False,
-            value='',
+            value=None,
             style={'width': '40%'}
         ),
     ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
@@ -380,7 +381,7 @@ app.layout = html.Div(children=[
             options=VALID_DIFF_INTERVALS,
             placeholder="Select difference interval",
             multi=False,
-            value='',
+            value=None,
             style={'width': '40%'}
         ),
     ], style={'display': 'None'}  # <-- This is the line that will be changed by the dropdown callback
@@ -394,7 +395,7 @@ app.layout = html.Div(children=[
                 {'label': 'Use same axis', 'value': 'Use same axis'},
                 {'label': 'Use secondary axis', 'value': 'Use secondary axis'},
             ],
-            value='No',
+            value='Use same axis',
         )
     ], style={'display': 'block'}
     ),
@@ -844,22 +845,15 @@ def update_graph(analysis_or_raw1, analysis_or_raw2, dataset_type_slctd1, datase
                  station_slctd1, variable_slctd1, dataset_type_slctd2, dataset_slctd2, start_date_slctd2, end_date_slctd2,
                  lat_slctd2, long_slctd2, station_slctd2, variable_slctd2, anal_type_1, anal_type_2, bin_size1, scatter_size1, sma_size1, diff_size1, bin_size2, scatter_size2, sma_size2, diff_size2,
                  second_or_no, axis_or_no):
-    if second_or_no in ['Yes']:
-        return [helper.get_double_plot(analysis_or_raw1, dataset_type_slctd1, dataset_slctd1, start_date_slctd1, end_date_slctd1, lat_slctd1,
-                        long_slctd1,
-                        station_slctd1, variable_slctd1, anal_type_1, bin_size1, scatter_size1, sma_size1, diff_size1,
-                        analysis_or_raw2, dataset_type_slctd2, dataset_slctd2, start_date_slctd2, end_date_slctd2,
-                        lat_slctd2, long_slctd2,
-                        station_slctd2, variable_slctd2, anal_type_2, bin_size2, scatter_size2, sma_size2, diff_size2,
-                        axis_or_no)]
 
-    if second_or_no in ['No']:
-        return [helper.get_single_plot(analysis_or_raw1, dataset_type_slctd1, dataset_slctd1, start_date_slctd1, end_date_slctd1, lat_slctd1,
-                        long_slctd1,
-                        station_slctd1, variable_slctd1, anal_type_1, bin_size1, scatter_size1, sma_size1, diff_size1)]
+    #1st thing to do, check query completeness. if incomplete return no graph. do the same thing in the parameter update column
 
-    else:
-        pass
+    input = InputQuery(second_or_no, dataset_type_slctd1, start_date_slctd1, end_date_slctd1, analysis_or_raw1, dataset_slctd1, lat_slctd1, long_slctd1, station_slctd1, variable_slctd1, anal_type_1, bin_size1,
+                        scatter_size1, sma_size1, analysis_or_raw2, dataset_type_slctd2, start_date_slctd2, end_date_slctd2, dataset_slctd2, lat_slctd2, long_slctd2, station_slctd2, variable_slctd2,
+                        anal_type_2, bin_size2, scatter_size2, sma_size2, axis_or_no)
+
+
+    return [input.plot]
 
 
 if __name__ == '__main__':
