@@ -1,4 +1,4 @@
-from vars import VALID_DATASET_LIST, VALID_DUTCH_STAT_LIST, VALID_CME_STAT_LIST, VALID_DUTCH_VAR_LIST, VALID_CME_VAR_LIST, VALID_GRIDFILE_LIST
+from vars import VALID_DATASET_LIST, VALID_DUTCH_STAT_LIST, VALID_CME_STAT_LIST, VALID_DUTCH_VAR_LIST, VALID_CME_VAR_LIST, VALID_GRIDFILE_LIST, VALID_SCATTERPLOT_LIST, VALID_HISTOGRAM_LIST, valid_analysis_types
 
 
 class DataQuery:
@@ -31,20 +31,41 @@ class DataQuery:
 
         pass
 
+
 class AnalysisQuery:
 
-    def check_query_completeness(self):
+    def __init__(self, analysis_or_raw=str, anal_type=None, bin_size=None, scatter_size=None, sma_size=None):
+        # run validations on received parameters
+        assert analysis_or_raw in ['Raw element', 'Analysis of an element'], f'{analysis_or_raw} is an invalid analysis/raw parameter. Valid parameters are "Raw element", "Analysis of an element".'
+        assert anal_type is None or anal_type in valid_analysis_types, f'Analysis type {anal_type} is an invalid analysis type.'
+        assert bin_size is None or bin_size in VALID_HISTOGRAM_LIST, f'Histogram bin size {bin_size} is an invalid histogram bin size'
+        assert scatter_size is None or scatter_size in VALID_SCATTERPLOT_LIST, f'Scatterplot bin size {scatter_size} is an invalid scatterplot bin size.'
+        # to do, add assert sma_size.... not going to do yet since sma input format is likely to be changed
 
-        pass
-
-    pass
+        self.analysis_or_raw = analysis_or_raw
+        self.anal_type = anal_type
+        self.bin_size = bin_size
+        self.scatter_size = scatter_size
+        self.sma_size = sma_size
 
 
 class InputQuery:
 
-    def check_query_completeness(self):
+    def __init__(self, single_or_double, dataset_type1: str, start_date1: str, end_date1: str, analysis_or_raw1=str, gridfile_dataset1=None,
+                 lat1=None, long1=None, station1=None, variable1=None, anal_type1=None,
+                 bin_size1=None, scatter_size1=None, sma_size1=None, analysis_or_raw2=None, dataset_type2=None, start_date2=None, end_date2=None, gridfile_dataset2=None,
+                 lat2=None, long2=None, station2=None, variable2=None, anal_type2=None,
+                 bin_size2=None, scatter_size2=None, sma_size2=None, axis_status=None):
+        # run validations on received parameters
+        assert single_or_double in ['Yes', 'No'], f'{single_or_double} is an invalid single/double plot parameter. Valid parameters are "No" (single) or "Yes" (double).'
+        assert axis_status is None or axis_status in ['Use seconday axis', 'Use same axis'], f'{axis_status} is an invalid axis status parameter. Valid parameters are "Use secondary axis", "Use same axis", or None.'
 
-        pass
+        # assign to self object
+        self.single_or_double = single_or_double
+        self.axis_status = axis_status
+        self.data_query1 = DataQuery(dataset_type1, start_date1, end_date1, gridfile_dataset1, lat1, long1, station1, variable1)
+        self.analysis_query1 = AnalysisQuery(analysis_or_raw1, anal_type1, bin_size1, scatter_size1, sma_size1)
 
-    pass
-
+        if single_or_double in ['Yes']:
+            self.data_query2 = DataQuery(dataset_type2, start_date2, end_date2, gridfile_dataset2, lat2, long2, station2, variable2)
+            self.analysis_query2 = AnalysisQuery(analysis_or_raw2, anal_type2, bin_size2, scatter_size2, sma_size2)
