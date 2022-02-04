@@ -6,6 +6,8 @@ from datetime import datetime
 from vars import TOKEN
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from scipy.signal import argrelextrema
+
 
 # given a grid history dataset, a valid lat/long tuple, and an
 # authentication token, return data as series for that given lat/long
@@ -172,11 +174,9 @@ def make_sma_frame(frame, wind):
     frame['Value'] = frame.rolling(window=wind).mean()
     return frame
 
-def get_single_plot(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_date_slctd, end_date_slctd, lat_slctd, long_slctd,
-                 station_slctd, variable_slctd, anal_type,  bin_size, scatter_size, sma_size, diff_size):
+def get_single_plot(inputquery):
 
-    info = get_graph_object_and_title(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_date_slctd, end_date_slctd, lat_slctd, long_slctd,
-                 station_slctd, variable_slctd, anal_type,  bin_size, scatter_size, sma_size, diff_size, 'Primary dataset')
+    info = get_graph_object_and_title(inputquery.data_query1, inputquery.analysis_query1, 'Primary dataset')
 
     go1 = info[0]
     title = info[1]
@@ -184,15 +184,15 @@ def get_single_plot(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_da
     analysis_title = ''
 
     # get title
-    if analysis_or_raw == "Raw element":
+    if inputquery.analysis_query1.analysis_or_raw == "Raw element":
         analysis_title = ''
-    if analysis_or_raw == "Analysis of an element":
-        analysis_title = anal_type + ' '
+    if inputquery.analysis_query1.analysis_or_raw == "Analysis of an element":
+        analysis_title = inputquery.analysis_query1.anal_type + ' '
 
-    if dataset_type_slctd == "Grid File Dataset History":
-        dataset_title = dataset_slctd
+    if inputquery.data_query1.dataset_type == "Grid File Dataset History":
+        dataset_title = inputquery.data_query1.gridfile_dataset
     else:
-        dataset_title = dataset_type_slctd
+        dataset_title = inputquery.data_query1.dataset_type
 
     fig = make_subplots(specs=[[{"secondary_y": False}]])
 
@@ -214,15 +214,11 @@ def get_single_plot(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_da
 
     return fig
 
-def get_double_plot(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_date_slctd, end_date_slctd, lat_slctd, long_slctd,
-                 station_slctd, variable_slctd, anal_type,  bin_size, scatter_size, sma_size, diff_size, analysis_or_raw2, dataset_type_slctd2, dataset_slctd2, start_date_slctd2, end_date_slctd2, lat_slctd2, long_slctd2,
-                 station_slctd2, variable_slctd2, anal_type2,  bin_size2, scatter_size2, sma_size2, diff_size2, second_axis):
+def get_double_plot(inputquery):
 
-    info1 = get_graph_object_and_title(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_date_slctd, end_date_slctd, lat_slctd, long_slctd,
-                 station_slctd, variable_slctd, anal_type,  bin_size, scatter_size, sma_size, diff_size, 'Primary dataset')
+    info1 = get_graph_object_and_title(inputquery.data_query1, inputquery.analysis_query1, 'Primary dataset')
 
-    info2 = get_graph_object_and_title(analysis_or_raw2, dataset_type_slctd2, dataset_slctd2, start_date_slctd2, end_date_slctd2, lat_slctd2, long_slctd2,
-                 station_slctd2, variable_slctd2, anal_type2,  bin_size2, scatter_size2, sma_size2, diff_size2, 'Secondary dataset')
+    info2 = get_graph_object_and_title(inputquery.data_query2, inputquery.analysis_query2, 'Secondary dataset')
 
     go1 = info1[0]
     title1 = info1[1]
@@ -234,28 +230,27 @@ def get_double_plot(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_da
     analysis_title2 = ''
 
     #get title
-    if analysis_or_raw == "Raw element":
+    if inputquery.analysis_query1.analysis_or_raw == "Raw element":
         analysis_title = ''
-    if analysis_or_raw == "Analysis of an element":
-        analysis_title = anal_type + ' '
+    if inputquery.analysis_query1.analysis_or_raw == "Analysis of an element":
+        analysis_title = inputquery.analysis_query1.anal_type + ' '
 
-    if analysis_or_raw2 == "Raw element":
+    if inputquery.analysis_query2.analysis_or_raw == "Raw element":
         analysis_title = ''
-    if analysis_or_raw2 == "Analysis of an element":
-        analysis_title2 = anal_type2 + ' '
+    if inputquery.analysis_query2.analysis_or_raw == "Analysis of an element":
+        analysis_title2 = inputquery.analysis_query2.anal_type + ' '
 
-    if dataset_type_slctd == "Grid File Dataset History":
-        dataset_title = dataset_slctd
+    if inputquery.data_query1.dataset_type == "Grid File Dataset History":
+        dataset_title = inputquery.data_query1.gridfile_dataset
     else:
-        dataset_title = dataset_type_slctd
+        dataset_title = inputquery.data_query1.dataset_type
 
-    if dataset_type_slctd2 == "Grid File Dataset History":
-        dataset_title2 = dataset_slctd2
+    if inputquery.data_query2.dataset_type == "Grid File Dataset History":
+        dataset_title2 = inputquery.data_query2.gridfile_dataset
     else:
-        dataset_title2 = dataset_type_slctd2
+        dataset_title2 = inputquery.data_query2.dataset_type
 
-
-    if second_axis in ['Use secondary axis']:
+    if inputquery.axis_status in ['Use secondary axis']:
 
         fig = make_subplots(specs=[[{"secondary_y": True}]])
 
@@ -286,7 +281,7 @@ def get_double_plot(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_da
 
         return fig
 
-    if second_axis in ['Use same axis']:
+    if inputquery.axis_status in ['Use same axis']:
         fig = make_subplots(specs=[[{"secondary_y": False}]])
 
         # Add traces
@@ -312,62 +307,67 @@ def get_double_plot(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_da
 
         return fig
 
-def get_graph_object_and_title(analysis_or_raw, dataset_type_slctd, dataset_slctd, start_date_slctd, end_date_slctd, lat_slctd, long_slctd,
-                 station_slctd, variable_slctd, anal_type,  bin_size, scatter_size, sma_size, diff_size, primary_or_secondary):
+def get_graph_object_and_title(dataquery, analysisquery, primary_or_secondary):
 
-    data = get_data(dataset_type_slctd, dataset_slctd, start_date_slctd, end_date_slctd, lat_slctd, long_slctd,
-                 station_slctd, variable_slctd)
+    #dataquery = DataQuery(dataset_type_slctd, start_date_slctd, end_date_slctd, dataset_slctd, lat_slctd, long_slctd, station_slctd, variable_slctd)
+
+    #data = get_data(dataquery.dataset_type, dataquery.gridfile_dataset, dataquery.start_date, dataquery.end_date, dataquery.lat, dataquery.long, dataquery.station, dataquery.variable)
+
+    data = dataquery.data
 
     frame = data[0]
     title = data[1]
 
-    if analysis_or_raw in ['Raw element']:
+    if analysisquery.analysis_or_raw in ['Raw element']:
         go1 = go.Scatter(x=frame['Datetime'], y=frame['Value'], name=primary_or_secondary + '')
 
-    if analysis_or_raw in ['Analysis of an element']:
+    if analysisquery.analysis_or_raw in ['Analysis of an element']:
 
-        if anal_type in ['Histogram - sum']:
+        if analysisquery.anal_type in ['Histogram - sum']:
             result = pd.DataFrame(frame)
 
-            bucketed = result.resample(bin_size, on='Datetime').Value.sum()
+            bucketed = result.resample(analysisquery.bin_size, on='Datetime').Value.sum()
             bucketed = pd.DataFrame(bucketed, columns=['Value'])
 
             go1 = go.Bar(x=bucketed.index, y=bucketed['Value'], name=primary_or_secondary + '')
 
-        if anal_type in ['Histogram - average']:
+        if analysisquery.anal_type in ['Histogram - average']:
             result = pd.DataFrame(frame)
 
-            bucketed = result.resample(bin_size, on='Datetime').Value.mean()
+            bucketed = result.resample(analysisquery.bin_size, on='Datetime').Value.mean()
             bucketed = pd.DataFrame(bucketed, columns=['Value'])
 
             go1 = go.Bar(x=bucketed.index, y=bucketed['Value'], name=primary_or_secondary + '')
 
-        if anal_type in ['Interval scatterplot - sum']:
+        if analysisquery.anal_type in ['Interval scatterplot - sum']:
             result = pd.DataFrame(frame)
 
-            bucketed = result.resample(scatter_size, on='Datetime').Value.sum()
+            bucketed = result.resample(analysisquery.scatter_size, on='Datetime').Value.sum()
             bucketed = pd.DataFrame(bucketed, columns=['Value'])
 
             go1 = go.Scatter(x=bucketed.index, y=bucketed['Value'], name=primary_or_secondary + '')
 
-        if anal_type in ['Interval scatterplot - average']:
+        if analysisquery.anal_type in ['Interval scatterplot - average']:
             result = pd.DataFrame(frame)
 
-            bucketed = result.resample(scatter_size, on='Datetime').Value.mean()
+            bucketed = result.resample(analysisquery.scatter_size, on='Datetime').Value.mean()
             bucketed = pd.DataFrame(bucketed, columns=['Value'])
 
             go1 = go.Scatter(x=bucketed.index, y=bucketed['Value'], name=primary_or_secondary + '')
 
-        if anal_type in ['Simple Moving Average']:
+
+        if analysisquery.anal_type in ['Simple Moving Average']:
 
             result = pd.DataFrame(frame)
 
-            window = int(sma_size)
+            window = int(analysisquery.sma_size)
             result[str(window) + ' moving average'] = result['Value'].rolling(window=window).mean()
 
             go1 = go.Scatter(x=result['Datetime'], y=result[str(window) + ' moving average'], name=primary_or_secondary + '')
 
+
     return go1, title
+
 
 def get_data(dataset_type_slctd, dataset_slctd, start_date_slctd, end_date_slctd, lat_slctd, long_slctd,
                  station_slctd, variable_slctd):
@@ -381,3 +381,7 @@ def get_data(dataset_type_slctd, dataset_slctd, start_date_slctd, end_date_slctd
                                           end_date_slctd)
 
     return result
+
+
+#for plotting extrema
+#Enter number of points to check for extrema in each direction
