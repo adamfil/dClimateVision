@@ -7,6 +7,7 @@ from vars import TOKEN
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from scipy.signal import argrelextrema
+import pytz
 
 
 # given a grid history dataset, a valid lat/long tuple, and an
@@ -47,7 +48,20 @@ def get_input_frequency(input):
 
 #given a series, and a start date and a end date, adjust series
 def trim_series(series, start, end):
-    series = series[start:end]
+    if len(str(series.index[0])) == 25:
+
+        start_year = int(start[0:4])
+        start_month = int(start[5:7])
+        start_day = int(start[8:10])
+        end_year = int(end[0:4])
+        end_month = int(end[5:7])
+        end_day = int(end[8:10])
+
+        start = datetime(start_year, start_month, start_day, 0, 0, 0, tzinfo=pytz.UTC)
+        end = datetime(end_year, end_month, end_day, 0, 0, 0, tzinfo=pytz.UTC)
+        series = series[start:end]
+    else:
+        series = series[start:end]
     return series
 
 #given a dataset, output valid max/min lat/long
@@ -212,6 +226,10 @@ def get_single_plot(inputquery):
     # Set y-axes titles
     fig.update_yaxes(title_text='Value')
 
+    fig.update_layout(
+        font_family="Courier New",
+    )
+
     return fig
 
 def get_double_plot(inputquery):
@@ -277,6 +295,10 @@ def get_double_plot(inputquery):
         # Set y-axes titles
         fig.update_yaxes(title_text='Value')
 
+        fig.update_layout(
+            font_family="Courier New",
+        )
+
 
 
         return fig
@@ -304,6 +326,8 @@ def get_double_plot(inputquery):
 
         # Set y-axes titles
         fig.update_yaxes(title_text='Value')
+
+
 
         return fig
 
