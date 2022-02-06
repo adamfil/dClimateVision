@@ -79,10 +79,10 @@ class InputQuery:
         if single_or_double in ['Yes']:
             self.data_query2 = DataQuery(dataset_type2, start_date2, end_date2, gridfile_dataset2, lat2, long2, station2, variable2)
             self.analysis_query2 = AnalysisQuery(analysis_or_raw2, anal_type2, bin_size2, scatter_size2, sma_size2)
-            self.plot = helper2.get_double_plot(self)
+            self.plot = helper.get_double_plot(self)
 
 
         else:
-            self.plot = helper2.get_single_plot(self)
+            self.plot = helper.get_single_plot(self)
 
 
