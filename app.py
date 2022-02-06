@@ -20,20 +20,40 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from classes import InputQuery
 
+INPUT_WIDTH = '340px'
+
 app = dash.Dash(__name__)
 server = app.server
 
-app.layout = html.Div(children=[
+app.layout = html.Div(
+
+    style={
+        "background-image": "url('assets/greenbrier2.jpg')",
+        "background-size": "100%",
+        "color": "white",
+        "display": "flex",
+        "justify-content": "center",
+        "align-items": "center",
+        "min-height" : "100vh",
+    },
+
+    children=[
+
+    html.Div(
+
+    children=[
 
     # title
-    html.H1("dClimate Data Visualization", style={
-        'text-align': 'center'
+    html.H1("dClimateViz", style={
+        "text-align": "center",
+        'fontSize': 55,
     }),
+
 
     # secondary dataset plot text
     html.H1("Plot primary element or analysis", style={
-        'text-align': 'left',
-        'fontSize': 18
+        'text-align': 'center',
+        'fontSize': 18,
     }),
 
     # select whether to plot analysis or raw element
@@ -46,7 +66,10 @@ app.layout = html.Div(children=[
             ],
             value='Raw element',
         )
-    ], style={'display': 'block'}
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",
+              }
     ),
 
     html.Div([
@@ -57,9 +80,17 @@ app.layout = html.Div(children=[
             placeholder="Select a primary dataset type",
             multi=False,
             value='',
-            style={'width': '40%'}
+            style={"display": "flex",
+                    "justify-content": "center",
+                    "align-items": "center",
+                    "width" : "340px"
+              }
+
         )
-    ], style={'display': 'block'}),  # <-- This is the line that will be changed by the dropdown callback
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",
+              }),  # <-- This is the line that will be changed by the dropdown callback
 
     # if type of dataset selected has subsections, select specific dataset
     html.Div([
@@ -68,9 +99,15 @@ app.layout = html.Div(children=[
             options=[],
             placeholder='Select a dataset',
             value=None,
-            style={'width': '40%'},
+            style={"display": "flex",
+                   "justify-content": "center",
+                   "align-items": "center",
+                   "width": "60vh"
+                   }
         )
-    ], style={'display': 'block'}),
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}),
 
     # lat
     html.Div([
@@ -81,7 +118,9 @@ app.layout = html.Div(children=[
             value='Enter a latitude',
             size='50',
         )
-    ], style={'display': 'block'}),  # <-- This is the line that will be changed by the dropdown callback
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}),  # <-- This is the line that will be changed by the dropdown callback
 
     # long
     html.Div([
@@ -92,7 +131,9 @@ app.layout = html.Div(children=[
             value='Enter a longitude',
             size='50',
         )
-    ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}  # <-- This is the line that will be changed by the dropdown callback
     ),
 
     # normal date range
@@ -106,7 +147,9 @@ app.layout = html.Div(children=[
             end_date=datetime.today()
 
         ),
-    ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}  # <-- This is the line that will be changed by the dropdown callback
     ),
 
     # weather variable
@@ -117,9 +160,10 @@ app.layout = html.Div(children=[
             options=[],
             placeholder='Select a weather variable',
             value=None,
-            style={'width': '40%'},
         )
-    ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}  # <-- This is the line that will be changed by the dropdown callback
     ),
 
     # station id
@@ -130,9 +174,10 @@ app.layout = html.Div(children=[
             options=[],
             placeholder='Select a station id',
             value=None,
-            style={'width': '40%'},
         )
-    ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}  # <-- This is the line that will be changed by the dropdown callback
     ),
 
     # select analysis type dcc
@@ -143,9 +188,10 @@ app.layout = html.Div(children=[
             placeholder="Select an analysis type",
             multi=False,
             value=None,
-            style={'width': '40%'}
         ),
-    ], style={'display': 'block'}
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}
     ),
 
     # select histogram bin size
@@ -157,9 +203,10 @@ app.layout = html.Div(children=[
             placeholder="Select a histogram bin size",
             multi=False,
             value=None,
-            style={'width': '40%'}
         ),
-    ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}  # <-- This is the line that will be changed by the dropdown callback
     ),
 
     # select scatterplot interval size
@@ -171,9 +218,10 @@ app.layout = html.Div(children=[
             placeholder="Select a scatterplot interval size",
             multi=False,
             value=None,
-            style={'width': '40%'}
         ),
-    ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}  # <-- This is the line that will be changed by the dropdown callback
     ),
 
     # select sma interval size
@@ -185,7 +233,9 @@ app.layout = html.Div(children=[
             value='Select SMA interval size in units of dataset frequency',
             size='50',
         )
-    ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}  # <-- This is the line that will be changed by the dropdown callback
     ),
 
     # select scatterplot interval size
@@ -197,15 +247,15 @@ app.layout = html.Div(children=[
             placeholder="Select difference interval",
             multi=False,
             value=None,
-            style={'width': '40%'}
         ),
     ], style={'display': 'None'}  # <-- This is the line that will be changed by the dropdown callback
     ),
 
     # secondary dataset plot text
     html.H1("Plot secondary element or analysis?", style={
-        'text-align': 'left',
-        'fontSize': 18
+        'text-align': 'center',
+        'fontSize': 18,
+
     }),
 
     # select whether to plot analysis AND raw element or NOT
@@ -218,7 +268,10 @@ app.layout = html.Div(children=[
             ],
             value='No',
         )
-    ], style={'display': 'block'}
+    ], style={ "display": "flex",
+        "justify-content": "center",
+        "align-items": "center",
+              }
     ),
 
     # select whether to plot analysis OR raw element
@@ -231,7 +284,9 @@ app.layout = html.Div(children=[
             ],
             value=None,
         )
-    ], style={'display': 'block'}
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}
     ),
 
     html.Div([
@@ -242,9 +297,10 @@ app.layout = html.Div(children=[
             placeholder="Select a secondary dataset type",
             multi=False,
             value='',
-            style={'width': '40%'}
         )
-    ], style={'display': 'block'}),  # <-- This is the line that will be changed by the dropdown callback
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}),  # <-- This is the line that will be changed by the dropdown callback
 
     # if type of dataset selected has subsections, select specific dataset
     html.Div([
@@ -253,9 +309,10 @@ app.layout = html.Div(children=[
             options=[],
             placeholder='Select a dataset',
             value=None,
-            style={'width': '40%'},
         )
-    ], style={'display': 'block'}),
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}),
 
     # lat
     html.Div([
@@ -266,7 +323,9 @@ app.layout = html.Div(children=[
             value='Enter a latitude',
             size='50',
         )
-    ], style={'display': 'block'}),  # <-- This is the line that will be changed by the dropdown callback
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}),  # <-- This is the line that will be changed by the dropdown callback
 
     # long
     html.Div([
@@ -277,7 +336,9 @@ app.layout = html.Div(children=[
             value='Enter a longitude',
             size='50',
         )
-    ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}  # <-- This is the line that will be changed by the dropdown callback
     ),
 
     # normal date range
@@ -291,7 +352,9 @@ app.layout = html.Div(children=[
             end_date=datetime.today()
 
         ),
-    ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}  # <-- This is the line that will be changed by the dropdown callback
     ),
 
     # weather variable
@@ -302,9 +365,10 @@ app.layout = html.Div(children=[
             options=[],
             placeholder='Select a weather variable',
             value=None,
-            style={'width': '40%'},
         )
-    ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}  # <-- This is the line that will be changed by the dropdown callback
     ),
 
     # station id
@@ -315,9 +379,10 @@ app.layout = html.Div(children=[
             options=[],
             placeholder='Select a station id',
             value=None,
-            style={'width': '40%'},
         )
-    ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}  # <-- This is the line that will be changed by the dropdown callback
     ),
 
     # select analysis type dcc
@@ -328,9 +393,10 @@ app.layout = html.Div(children=[
             placeholder="Select an analysis type",
             multi=False,
             value=None,
-            style={'width': '40%'}
         ),
-    ], style={'display': 'block'}
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}
     ),
 
     # select histogram bin size
@@ -342,9 +408,10 @@ app.layout = html.Div(children=[
             placeholder="Select a histogram bin size",
             multi=False,
             value=None,
-            style={'width': '40%'}
         ),
-    ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}  # <-- This is the line that will be changed by the dropdown callback
     ),
 
     # select scatterplot interval size
@@ -356,9 +423,10 @@ app.layout = html.Div(children=[
             placeholder="Select a scatterplot interval size",
             multi=False,
             value=None,
-            style={'width': '40%'}
         ),
-    ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}  # <-- This is the line that will be changed by the dropdown callback
     ),
 
     # select sma interval size
@@ -370,7 +438,9 @@ app.layout = html.Div(children=[
             value='Select SMA interval size in units of dataset frequency',
             size='50',
         )
-    ], style={'display': 'block'}  # <-- This is the line that will be changed by the dropdown callback
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}  # <-- This is the line that will be changed by the dropdown callback
     ),
 
     # select difference interval size
@@ -382,9 +452,10 @@ app.layout = html.Div(children=[
             placeholder="Select difference interval",
             multi=False,
             value=None,
-            style={'width': '40%'}
         ),
-    ], style={'display': 'None'}  # <-- This is the line that will be changed by the dropdown callback
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",}  # <-- This is the line that will be changed by the dropdown callback
     ),
 
     # select whether to plot analysis AND raw element or NOT
@@ -397,13 +468,29 @@ app.layout = html.Div(children=[
             ],
             value='Use same axis',
         )
-    ], style={'display': 'block'}
+    ], style={"display": "flex",
+        "justify-content": "center",
+        "align-items": "center"}
     ),
 
-    # plot figure
-    dcc.Graph(id='my_series_graph', figure={})
+    html.Div([
+        # plot figure
+        dcc.Graph(id='my_series_graph', style={'width': '90vw', 'height': '64vh', 'textAlign': 'center'}, figure={}),
 
-])
+    ], style={'display': 'flex', 'align-items': 'center', 'justify-content': 'center', "border":"3px black solid"}),
+
+    html.Div([
+        # plot figure
+        html.H1("github.com/adamfil/dclimateviz", style={
+            "text-align": "center",
+            "fontSize": 18,
+        }),
+
+    ]),
+
+
+
+])])
 
 @app.callback(
    [
@@ -421,10 +508,11 @@ app.layout = html.Div(children=[
 def show_relevant_parameters_primary(slctd_dataset_type):
 
     if slctd_dataset_type in ['GFS Forecasts', 'Grid File Dataset History']:
-        return {'display': 'block'}, {'display': 'block'}, {'display': 'block'}, {'display': 'block'}, {'display': 'none'}, {'display': 'none'}
+        return {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {"display": "flex",
+        "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}
 
     if slctd_dataset_type in ['Dutch Station History', 'CME Station History', 'GHCN Dataset History', 'German Station History']:
-        return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'block'}, {'display': 'block'}, {'display': 'block'}
+        return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}
 
     else:
         return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}
@@ -481,7 +569,7 @@ def update_statvariable_input_primary(slctd_dataset_type):
 def update_analysis_or_raw(input):
 
     if input in ['Analysis of an element']:
-        return [{'display': 'block'}]
+        return [{'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}]
 
     if input in ['Raw element']:
         return [{'display': 'none'}]
@@ -502,7 +590,7 @@ def update_analysis_or_raw(input1, input2):
         return [{'display': 'none'}]
 
     if input1 in ['Analysis of an element']:
-        return [{'display': 'block'}]
+        return [{'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}]
 
     if input1 in ['Raw element']:
         return [{'display': 'none'}]
@@ -528,19 +616,19 @@ def update_analysis_or_raw1(input1, input2):
 
     #select parameters to display for histograms
     if input1 in ['Histogram - sum', 'Histogram - average']:
-        return [{'display': 'block'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
+        return [{'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
 
     #select parameters to display for scatterplots
     if input1 in ['Interval scatterplot - sum', 'Interval scatterplot - average']:
-        return [{'display': 'none'}, {'display': 'block'}, {'display': 'none'}, {'display': 'none'}]
+        return [{'display': 'none'},{'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}]
 
     #select parameters to display for SMA
     if input1 in ['Simple Moving Average']:
-        return [{'display': 'none'}, {'display': 'none'}, {'display': 'block'}, {'display': 'none'}]
+        return [{'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}]
 
     #select parameters to display for diff plot
     if input1 in ['Difference of element']:
-        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'block'}]
+        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}]
 
     #display no parameters
     if input1 in ['']:
@@ -572,19 +660,19 @@ def update_analysis_or_raw2(input1, input2, input3):
 
     #select parameters to display for histograms
     if input1 in ['Histogram - sum', 'Histogram - average']:
-        return [{'display': 'block'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
+        return [{'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
 
     #select parameters to display for scatterplots
     if input1 in ['Interval scatterplot - sum', 'Interval scatterplot - average']:
-        return [{'display': 'none'}, {'display': 'block'}, {'display': 'none'}, {'display': 'none'}]
+        return [{'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}]
 
     #select parameters to display for SMA
     if input1 in ['Simple Moving Average']:
-        return [{'display': 'none'}, {'display': 'none'}, {'display': 'block'}, {'display': 'none'}]
+        return [{'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}]
 
     #select parameters to display for diff plot
     if input1 in ['Difference of element']:
-        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'block'}]
+        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}]
 
     #display no parameters
     if input1 in ['']:
@@ -602,7 +690,7 @@ def update_analysis_or_raw2(input1, input2, input3):
 def update_analysis_or_raw(input):
 
     if input in ['Yes']:
-        return [{'display': 'block'}]
+        return [{'display': 'flex', "justify-content": "center", "align-items": "center"}]
 
     if input in ['No']:
         return [{'display': 'none'}]
@@ -632,15 +720,15 @@ def show_relevant_parameters_secondary(slctd_dataset_type, second_input):
     else:
         # show relevant parameters for dataset type
         if slctd_dataset_type in ['GFS Forecasts', 'Grid File Dataset History']:
-            return {'display': 'block'}, {'display': 'block'}, {'display': 'block'}, {'display': 'block'}, {'display': 'none'}, {'display': 'none'}, {'display': 'block'}, {'display': 'block'}
+            return {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}
 
         # show relevant parameters for dataset type
         if slctd_dataset_type in ['Dutch Station History', 'CME Station History', 'GHCN Dataset History', 'German Station History']:
-            return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'block'}, {'display': 'block'}, {'display': 'block'}, {'display': 'block'}, {'display': 'block'}
+            return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH},{'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}
 
         # if no data type is selected but secondary input is yes, only show option to select data type
         if slctd_dataset_type in ['']:
-            return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'block'}, {'display': 'block'}
+            return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}
 
 @app.callback(
    [
@@ -855,6 +943,7 @@ def update_graph(analysis_or_raw1, analysis_or_raw2, dataset_type_slctd1, datase
 
     return [input.plot]
 
+#add to above callback: if query_completeness = incomplete -> return graph display none, return container text "incomplete query". if query complete, return graph display flex + input.plot
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
