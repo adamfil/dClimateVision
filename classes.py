@@ -81,6 +81,8 @@ class InputQuery:
             self.analysis_query2 = AnalysisQuery(analysis_or_raw2, anal_type2, bin_size2, scatter_size2, sma_size2)
             self.plot = helper2.get_double_plot(self)
 
+
         else:
             self.plot = helper2.get_single_plot(self)
+
 
