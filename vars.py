@@ -1,4 +1,4 @@
-TOKEN = 'REDACTED'
+TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjI1MzQwMjMwMDc5OSwiaWF0IjoxNjMwNTMwMTgwLCJzdWIiOiJhMDIzYjUwYi0wOGQ2LTQwY2QtODNiMS1iMTExZDA2Mzk1MmEifQ.qHy4B0GK22CkYOTO8gsxh0YzE8oLMMa6My8TvhwhxMk'
 
 state_codes = {
   "10": "Delaware", "12": "Florida", "13": "Georgia", "15": "Hawaii", "16": "Idaho", "17": "Illinois", "18": "Indiana",
@@ -161,3 +161,4 @@ VALID_DIFF_INTERVALS = [{'label': 'Last observation', 'value': 'Last observation
 
 # to do:
 #add seondaxisorno as var
+
