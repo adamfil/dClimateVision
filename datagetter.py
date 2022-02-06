@@ -1,11 +1,29 @@
 from vars import TOKEN
 import pandas as pd
 import requests
+from datetime import datetime
+import pytz
 
 
 # given a series, and a start date and a end date, adjust series
+#given a series, and a start date and a end date, adjust series
 def trim_series(series, start, end):
-    series = series[start:end]
+
+    #deal with trimming timezone aware series... sloppy code as is
+    if len(str(series.index[0])) == 25:
+
+        start_year = int(start[0:4])
+        start_month = int(start[5:7])
+        start_day = int(start[8:10])
+        end_year = int(end[0:4])
+        end_month = int(end[5:7])
+        end_day = int(end[8:10])
+
+        start = datetime(start_year, start_month, start_day, 0, 0, 0, tzinfo=pytz.UTC)
+        end = datetime(end_year, end_month, end_day, 0, 0, 0, tzinfo=pytz.UTC)
+        series = series[start:end]
+    else:
+        series = series[start:end]
     return series
 
 
