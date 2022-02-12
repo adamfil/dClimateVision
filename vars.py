@@ -1,4 +1,5 @@
 TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjI1MzQwMjMwMDc5OSwiaWF0IjoxNjMwNTMwMTgwLCJzdWIiOiJhMDIzYjUwYi0wOGQ2LTQwY2QtODNiMS1iMTExZDA2Mzk1MmEifQ.qHy4B0GK22CkYOTO8gsxh0YzE8oLMMa6My8TvhwhxMk'
+TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjI1MzQwMjMwMDc5OSwiaWF0IjoxNjQzODI1MjY5LCJzdWIiOiI0NTIwOTBiNi0yNTZmLTQ2MDYtYmI3MS0zNjEwNDJkNjAxYjkifQ.F2qGQd_fGgL-wfXJ88g22sg5yruhXUmXdMfWF_cFXSs'
 
 state_codes = {
   "10": "Delaware", "12": "Florida", "13": "Georgia", "15": "Hawaii", "16": "Idaho", "17": "Illinois", "18": "Indiana",
@@ -23,7 +24,7 @@ VALID_DATASET_TYPES = []
 VALID_DATASET_LIST = []
 
 for set in all_dataset_types:
-    if set in ['Grid File Dataset History', 'CME Station History', 'Dutch Station History']:
+    if set in ['Grid File Dataset History', 'CME Station History', 'Dutch Station History', 'GFS Forecasts']:
         VALID_DATASET_TYPES.append({'label': set, 'value': set})
         VALID_DATASET_LIST.append(set)
 #usda rma codes currently left off valid dataset types
@@ -161,4 +162,3 @@ VALID_DIFF_INTERVALS = [{'label': 'Last observation', 'value': 'Last observation
 
 # to do:
 #add seondaxisorno as var
-
