@@ -35,3 +35,10 @@ width: 35%;
   width: 40%; /* replace with whatever length you prefer */
 }
 
+
+a {
+  text-decoration: underline;
+  color: inherit;
+  transition: opacity 100ms ease-in-out; }
+  a:hover, a:active {
+    color:   #c6ceff; }
