@@ -1,6 +1,6 @@
 from vars import VALID_DATASET_LIST, VALID_DUTCH_STAT_LIST, VALID_CME_STAT_LIST, VALID_DUTCH_VAR_LIST, VALID_CME_VAR_LIST, VALID_GRIDFILE_LIST, VALID_SCATTERPLOT_LIST, VALID_HISTOGRAM_LIST, valid_analysis_types
 import datagetter
-import helper2
+import helper
 from functools import wraps
 import inspect
 
@@ -195,10 +195,10 @@ class InputQuery:
         if single_or_double in ['Yes']:
             self.data_query2 = DataQuery(dataset_type2, start_date2, end_date2, gridfile_dataset2, forecast_dataset2, lat2, long2, station2, variable2, forecast_date2, ghcn2)
             self.analysis_query2 = AnalysisQuery(analysis_or_raw2, anal_type2, bin_size2, scatter_size2, sma_size2, extrema_size2)
-            self.plot = helper2.get_double_plot(self)
+            self.plot = helper.get_double_plot(self)
 
 
         else:
-            self.plot = helper2.get_single_plot(self)
+            self.plot = helper.get_single_plot(self)
 
 
