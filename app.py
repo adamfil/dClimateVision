@@ -3,7 +3,7 @@ import plotly.express as px
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-#import dash_bootstrap_components as dbc
+import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 from vars import VALID_DATASET_TYPES
 from vars import VALID_GRIDFILE_DASHSET
@@ -22,19 +22,23 @@ from classes import InputQuery
 
 INPUT_WIDTH = '340px'
 
-app = dash.Dash(__name__)
+theme = [dbc.themes.SLATE]
+
+app = dash.Dash(__name__, external_stylesheets=theme)
 server = app.server
 
 app.layout = html.Div(
 
     style={
-        "background-image": "url('assets/greenbrier2.jpg')",
+        #"background-image": "url('assets/greenbrier2.jpg')",
+        "background-color": "#111111",
         "background-size": "100%",
         "color": "white",
         "display": "flex",
         "justify-content": "center",
         "align-items": "center",
         "min-height" : "100vh",
+        "font-size": "16px",
     },
 
     children=[
@@ -46,14 +50,14 @@ app.layout = html.Div(
     # title
     html.H1("dClimateViz", style={
         "text-align": "center",
-        'fontSize': 55,
+        'fontSize': 42,
     }),
 
 
     # secondary dataset plot text
     html.H1("Plot primary element or analysis", style={
         'text-align': 'center',
-        'fontSize': 18,
+        'fontSize': 16,
     }),
 
     # select whether to plot analysis or raw element
@@ -109,13 +113,57 @@ app.layout = html.Div(
         "justify-content": "center",
         "align-items": "center",}),
 
+        # if type of dataset selected has subsections, select specific dataset
+    html.Div([
+        dcc.Dropdown(
+            id='forecasts-to-hide',
+            options=[],
+            placeholder='Select a forecast',
+            value=None,
+            style={"display": "flex",
+                    "justify-content": "center",
+                    "align-items": "center",
+                    "width": "60vh"
+                    }
+        )
+    ], style={"display": "flex",
+                  "justify-content": "center",
+                  "align-items": "center", }),
+
+        # select sma interval size
+    html.Div([
+        # Create element to hide/show, in this case an 'Input Component'
+        dcc.Input(
+            id='slct-forecast_date',
+            placeholder='Input a forecast date (YYYY-MM-DD)',
+            value=None,
+            size='50',
+        )
+    ], style={"display": "flex",
+                "justify-content": "center",
+                "align-items": "center", }  # <-- This is the line that will be changed by the dropdown callback
+    ),
+
+    html.Div([
+        # Create element to hide/show, in this case an 'Input Component'
+        dcc.Input(
+            id='slct-ghcn',
+            placeholder='Input a GHCN Station',
+            value=None,
+            size='50',
+        )
+    ], style={"display": "flex",
+              "justify-content": "center",
+              "align-items": "center", }  # <-- This is the line that will be changed by the dropdown callback
+    ),
+
     # lat
     html.Div([
         # Create element to hide/show, in this case an 'Input Component'
         dcc.Input(
             id='lat-to-hide',
-            placeholder='something',
-            value='Enter a latitude',
+            placeholder='Enter a Latitude',
+            value=None,
             size='50',
         )
     ], style={"display": "flex",
@@ -127,8 +175,8 @@ app.layout = html.Div(
         # Create element to hide/show, in this case an 'Input Component'
         dcc.Input(
             id='long-to-hide',
-            placeholder='something',
-            value='Enter a longitude',
+            placeholder='Enter a longitude',
+            value=None,
             size='50',
         )
     ], style={"display": "flex",
@@ -229,13 +277,27 @@ app.layout = html.Div(
         # Create element to hide/show, in this case an 'Input Component'
         dcc.Input(
             id='slct-sma-size',
-            placeholder='something',
-            value='Select SMA interval size in units of dataset frequency',
+            placeholder='Input # of points to average',
+            value=None,
             size='50',
         )
     ], style={"display": "flex",
         "justify-content": "center",
         "align-items": "center",}  # <-- This is the line that will be changed by the dropdown callback
+    ),
+
+    # select sma interval size
+    html.Div([
+            # Create element to hide/show, in this case an 'Input Component'
+        dcc.Input(
+            id='slct-extrema-size',
+            placeholder='Input # of points to check',
+            value=None,
+            size='50',
+    )
+    ], style={"display": "flex",
+              "justify-content": "center",
+              "align-items": "center", }  # <-- This is the line that will be changed by the dropdown callback
     ),
 
     # select scatterplot interval size
@@ -254,7 +316,7 @@ app.layout = html.Div(
     # secondary dataset plot text
     html.H1("Plot secondary element or analysis?", style={
         'text-align': 'center',
-        'fontSize': 18,
+        'fontSize': 16,
 
     }),
 
@@ -282,7 +344,7 @@ app.layout = html.Div(
                 {'label': 'Raw element', 'value': 'Raw element'},
                 {'label': 'Analysis of an element', 'value': 'Analysis of an element'},
             ],
-            value=None,
+            value='Raw element',
         )
     ], style={"display": "flex",
         "justify-content": "center",
@@ -314,13 +376,57 @@ app.layout = html.Div(
         "justify-content": "center",
         "align-items": "center",}),
 
-    # lat
+    # if type of dataset selected has subsections, select specific dataset
+    html.Div([
+        dcc.Dropdown(
+            id='forecasts-to-hide2',
+            options=[],
+            placeholder='Select a forecast',
+            value=None,
+            style={"display": "flex",
+                    "justify-content": "center",
+                    "align-items": "center",
+                    "width": "60vh"
+                    }
+        )
+    ], style={"display": "flex",
+                "justify-content": "center",
+                "align-items": "center", }),
+
+    # select sma interval size
+    html.Div([
+        # Create element to hide/show, in this case an 'Input Component'
+        dcc.Input(
+            id='slct-forecast_date2',
+            placeholder='Input a forecast date (YYYY-MM-DD format)',
+            value=None,
+            size='50',
+        )
+    ], style={"display": "flex",
+              "justify-content": "center",
+              "align-items": "center", }  # <-- This is the line that will be changed by the dropdown callback
+        ),
+
+    html.Div([
+        # Create element to hide/show, in this case an 'Input Component'
+        dcc.Input(
+            id='slct-ghcn2',
+            placeholder='Input a GHCN Station',
+            value=None,
+            size='50',
+         )
+    ], style={"display": "flex",
+              "justify-content": "center",
+              "align-items": "center", }  # <-- This is the line that will be changed by the dropdown callback
+        ),
+
+        # lat
     html.Div([
         # Create element to hide/show, in this case an 'Input Component'
         dcc.Input(
             id='lat-to-hide2',
-            placeholder='something',
-            value='Enter a latitude',
+            placeholder='Enter a latitude',
+            value=None,
             size='50',
         )
     ], style={"display": "flex",
@@ -332,8 +438,8 @@ app.layout = html.Div(
         # Create element to hide/show, in this case an 'Input Component'
         dcc.Input(
             id='long-to-hide2',
-            placeholder='something',
-            value='Enter a longitude',
+            placeholder='Enter a longitude',
+            value=None,
             size='50',
         )
     ], style={"display": "flex",
@@ -434,13 +540,27 @@ app.layout = html.Div(
         # Create element to hide/show, in this case an 'Input Component'
         dcc.Input(
             id='slct-sma-size2',
-            placeholder='something',
-            value='Select SMA interval size in units of dataset frequency',
+            placeholder='Input a number of points to average',
+            value=None,
             size='50',
         )
     ], style={"display": "flex",
         "justify-content": "center",
         "align-items": "center",}  # <-- This is the line that will be changed by the dropdown callback
+    ),
+
+    # select sma interval size
+    html.Div([
+        # Create element to hide/show, in this case an 'Input Component'
+        dcc.Input(
+            id='slct-extrema-size2',
+            placeholder='Input a number of points to check',
+            value=None,
+            size='50',
+        )
+    ], style={"display": "flex",
+              "justify-content": "center",
+              "align-items": "center", }  # <-- This is the line that will be changed by the dropdown callback
     ),
 
     # select difference interval size
@@ -475,18 +595,17 @@ app.layout = html.Div(
 
     html.Div([
         # plot figure
-        dcc.Graph(id='my_series_graph', style={'width': '90vw', 'height': '64vh', 'textAlign': 'center'}, figure={}),
+        dcc.Graph(id='my_series_graph', style={'width': '90vw', 'height': '64vh', 'textAlign': 'center', "border":"1px black solid"}, figure={}),
 
-    ], style={'display': 'flex', 'align-items': 'center', 'justify-content': 'center', "border":"3px black solid"}),
+    ], style={'display': 'flex', 'align-items': 'center', 'justify-content': 'center', "border":"2px white solid"}),
 
     html.Div([
         # plot figure
-        html.H1("github.com/adamfil/dclimateviz", style={
-            "text-align": "center",
-            "fontSize": 18,
-        }),
-
-    ]),
+        html.A("github.com/adamfil/dclimateviz", href='https://github.com/adamfil/dclimateviz'),
+        ], style={
+            'display': 'flex', "justify-content": "center", "align-items": "center",
+        }
+    ),
 
 
 
@@ -495,11 +614,13 @@ app.layout = html.Div(
 @app.callback(
    [
        Output(component_id='datasets-to-hide', component_property='style'),
+       Output(component_id='forecasts-to-hide', component_property='style'),
        Output(component_id='lat-to-hide', component_property='style'),
        Output(component_id='long-to-hide', component_property='style'),
        Output(component_id='daterange-to-hide', component_property='style'),
        Output(component_id='variable-to-hide', component_property='style'),
-       Output(component_id='station-to-hide', component_property='style')
+       Output(component_id='station-to-hide', component_property='style'),
+       Output(component_id='slct-ghcn', component_property='style'),
    ],
 
    [Input(component_id='slct-dataset-type', component_property='value')])
@@ -507,15 +628,23 @@ app.layout = html.Div(
 
 def show_relevant_parameters_primary(slctd_dataset_type):
 
-    if slctd_dataset_type in ['GFS Forecasts', 'Grid File Dataset History']:
-        return {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {"display": "flex",
-        "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}
+    if slctd_dataset_type in ['Grid File Dataset History']:
+        return {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {"display": "flex",
+        "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}
 
-    if slctd_dataset_type in ['Dutch Station History', 'CME Station History', 'GHCN Dataset History', 'German Station History']:
-        return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}
+
+    if slctd_dataset_type in ['GFS Forecasts']:
+        return {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {"display": "flex",
+        "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}
+
+    if slctd_dataset_type in ['Dutch Station History', 'CME Station History', 'German Station History']:
+        return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}
+
+    if slctd_dataset_type in ['GHCN Dataset History']:
+        return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}
 
     else:
-        return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}
+        return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}
 
 @app.callback(
    [
@@ -529,6 +658,37 @@ def update_dataset_input_primary(slctd_dataset_type):
 
     if slctd_dataset_type in ['Grid File Dataset History']:
         return [VALID_GRIDFILE_DASHSET]
+
+    if slctd_dataset_type in ['GFS Forecasts']:
+        return [VALID_GFS_DASHSET]
+
+    else:
+        pass
+
+@app.callback(
+   [
+       Output(component_id='forecasts-to-hide', component_property='options'),
+   ],
+
+   [Input(component_id='slct-dataset-type', component_property='value')])
+
+
+def update_forecast_input_primary(slctd_dataset_type):
+
+    if slctd_dataset_type in ['GFS Forecasts']:
+        return [VALID_GFS_DASHSET]
+    else:
+        pass
+
+@app.callback(
+   [
+       Output(component_id='forecasts-to-hide2', component_property='options'),
+   ],
+
+   [Input(component_id='slct-dataset-type2', component_property='value')])
+
+
+def update_forecast_input_secondary(slctd_dataset_type):
 
     if slctd_dataset_type in ['GFS Forecasts']:
         return [VALID_GFS_DASHSET]
@@ -556,6 +716,45 @@ def update_statvariable_input_primary(slctd_dataset_type):
         pass
     else:
         pass
+
+#update input parameters based on analysis type selected
+@app.callback(
+   [
+       Output(component_id='slct-forecast_date', component_property='style'),
+   ],
+
+   [Input(component_id='slct-dataset-type', component_property='value')])
+
+
+def update_forecast_input(input):
+
+    #select parameters to display for histograms
+    if input in ['GFS Forecasts']:
+        return [{'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}]
+
+    else:
+        return [{'display': 'none'}]
+
+#update input parameters based on analysis type selected
+@app.callback(
+   [
+       Output(component_id='slct-forecast_date2', component_property='style'),
+   ],
+
+   [Input(component_id='slct-dataset-type2', component_property='value'),
+    Input(component_id='secondary-or-no', component_property='value')])
+
+
+def update_forecast_input2(input1, input2):
+    if input2 in ["No"]:
+        return [{'display': 'none'}]
+
+    #select parameters to display for histograms
+    elif input1 in ['GFS Forecasts']:
+        return [{'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}]
+
+    else:
+        return [{'display': 'none'}]
 
 #update primary input based on whether analysis or raw element is selected
 @app.callback(
@@ -601,6 +800,7 @@ def update_analysis_or_raw(input1, input2):
        Output(component_id='slct-bin-size', component_property='style'),
        Output(component_id='slct-scatterplot-size', component_property='style'),
        Output(component_id='slct-sma-size', component_property='style'),
+       Output(component_id='slct-extrema-size', component_property='style'),
        Output(component_id='slct-diff-size', component_property='style'),
    ],
 
@@ -612,27 +812,31 @@ def update_analysis_or_raw1(input1, input2):
 
     #show no parameters if raw element is selected
     if input2 in ['Raw element']:
-        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
+        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
 
     #select parameters to display for histograms
     if input1 in ['Histogram - sum', 'Histogram - average']:
-        return [{'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
+        return [{'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
 
     #select parameters to display for scatterplots
     if input1 in ['Interval scatterplot - sum', 'Interval scatterplot - average']:
-        return [{'display': 'none'},{'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}]
+        return [{'display': 'none'},{'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
 
     #select parameters to display for SMA
     if input1 in ['Simple Moving Average']:
-        return [{'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}]
+        return [{'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}]
 
     #select parameters to display for diff plot
     if input1 in ['Difference of element']:
-        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}]
+        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}]
+
+    #select parameters to display for diff plot
+    if input1 in ['Show Extrema']:
+        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}]
 
     #display no parameters
     if input1 in ['']:
-        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
+        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
 
 #update input parameters based on analysis type selected
 @app.callback(
@@ -640,6 +844,7 @@ def update_analysis_or_raw1(input1, input2):
        Output(component_id='slct-bin-size2', component_property='style'),
        Output(component_id='slct-scatterplot-size2', component_property='style'),
        Output(component_id='slct-sma-size2', component_property='style'),
+       Output(component_id='slct-extrema-size2', component_property='style'),
        Output(component_id='slct-diff-size2', component_property='style'),
    ],
 
@@ -652,31 +857,35 @@ def update_analysis_or_raw2(input1, input2, input3):
 
     #show no parameters if raw element is selected
     if input3 in ['No']:
-        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
+        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
 
     #show no parameters if raw element is selected
     if input2 in ['Raw element']:
-        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
+        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
 
     #select parameters to display for histograms
     if input1 in ['Histogram - sum', 'Histogram - average']:
-        return [{'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
+        return [{'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
 
     #select parameters to display for scatterplots
     if input1 in ['Interval scatterplot - sum', 'Interval scatterplot - average']:
-        return [{'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}]
+        return [{'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
 
     #select parameters to display for SMA
     if input1 in ['Simple Moving Average']:
-        return [{'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}]
+        return [{'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}]
 
     #select parameters to display for diff plot
     if input1 in ['Difference of element']:
-        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}]
+        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}]
+
+    #select parameters to display for diff plot
+    if input1 in ['Show Extrema']:
+        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}]
 
     #display no parameters
     if input1 in ['']:
-        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
+        return [{'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}]
 
 #show/hide secondary selection of raw element vs analysis of an element
 @app.callback(
@@ -699,6 +908,7 @@ def update_analysis_or_raw(input):
 @app.callback(
    [
        Output(component_id='datasets-to-hide2', component_property='style'),
+       Output(component_id='forecasts-to-hide2', component_property='style'),
        Output(component_id='lat-to-hide2', component_property='style'),
        Output(component_id='long-to-hide2', component_property='style'),
        Output(component_id='daterange-to-hide2', component_property='style'),
@@ -706,6 +916,7 @@ def update_analysis_or_raw(input):
        Output(component_id='station-to-hide2', component_property='style'),
        Output(component_id='slct-dataset-type2', component_property='style'),
        Output(component_id='axis-or-no', component_property='style'),
+       Output(component_id='slct-ghcn2', component_property='style'),
    ],
 
    [Input(component_id='slct-dataset-type2', component_property='value'),
@@ -715,20 +926,27 @@ def update_analysis_or_raw(input):
 def show_relevant_parameters_secondary(slctd_dataset_type, second_input):
     # if no secondary input is selected, show no parameters
     if second_input == 'No':
-        return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}
+        return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}
 
     else:
         # show relevant parameters for dataset type
-        if slctd_dataset_type in ['GFS Forecasts', 'Grid File Dataset History']:
-            return {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}
+        if slctd_dataset_type in ['Grid File Dataset History']:
+            return {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}
+
+        if slctd_dataset_type in ['GFS Forecasts']:
+            return {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}
 
         # show relevant parameters for dataset type
-        if slctd_dataset_type in ['Dutch Station History', 'CME Station History', 'GHCN Dataset History', 'German Station History']:
-            return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH},{'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}
+        if slctd_dataset_type in ['Dutch Station History', 'CME Station History', 'German Station History']:
+            return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH},{'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}
+
+        # show relevant parameters for dataset type
+        if slctd_dataset_type in ['GHCN Dataset History']:
+            return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH},{'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}
 
         # if no data type is selected but secondary input is yes, only show option to select data type
         if slctd_dataset_type in ['']:
-            return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}
+            return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'flex', "justify-content": "center", "align-items": "center", "width": INPUT_WIDTH}, {'display': 'none'}
 
 @app.callback(
    [
@@ -893,13 +1111,17 @@ def update_daterange2(slctd_dataset_type, slctd_dataset):
 #callback to produce graph
 @app.callback(
     [
-        Output(component_id='my_series_graph', component_property='figure')
+        Output(component_id='my_series_graph', component_property='figure'),
+        Output(component_id='my_series_graph', component_property='style')
     ],
     [
         Input(component_id='primary-analysis-or-raw', component_property='value'),
         Input(component_id='secondary-analysis-or-raw', component_property='value'),
         Input(component_id='slct-dataset-type', component_property='value'),
         Input(component_id='datasets-to-hide', component_property='value'),
+        Input(component_id='forecasts-to-hide', component_property='value'),
+        Input(component_id='slct-forecast_date', component_property='value'),
+        Input(component_id='slct-ghcn', component_property='value'),
         Input(component_id='daterange-to-hide', component_property='start_date'),
         Input(component_id='daterange-to-hide', component_property='end_date'),
         Input(component_id='lat-to-hide', component_property='value'),
@@ -908,6 +1130,9 @@ def update_daterange2(slctd_dataset_type, slctd_dataset):
         Input(component_id='variable-to-hide', component_property='value'),
         Input(component_id='slct-dataset-type2', component_property='value'),
         Input(component_id='datasets-to-hide2', component_property='value'),
+        Input(component_id='forecasts-to-hide2', component_property='value'),
+        Input(component_id='slct-forecast_date2', component_property='value'),
+        Input(component_id='slct-ghcn2', component_property='value'),
         Input(component_id='daterange-to-hide2', component_property='start_date'),
         Input(component_id='daterange-to-hide2', component_property='end_date'),
         Input(component_id='lat-to-hide2', component_property='value'),
@@ -919,29 +1144,36 @@ def update_daterange2(slctd_dataset_type, slctd_dataset):
         Input(component_id='slct-bin-size', component_property='value'),
         Input(component_id='slct-scatterplot-size', component_property='value'),
         Input(component_id='slct-sma-size', component_property='value'),
+        Input(component_id='slct-extrema-size', component_property='value'),
         Input(component_id='slct-diff-size', component_property='value'),
         Input(component_id='slct-bin-size2', component_property='value'),
         Input(component_id='slct-scatterplot-size2', component_property='value'),
         Input(component_id='slct-sma-size2', component_property='value'),
+        Input(component_id='slct-extrema-size2', component_property='value'),
         Input(component_id='slct-diff-size2', component_property='value'),
         Input(component_id='secondary-or-no', component_property='value'),
         Input(component_id='axis-or-no', component_property='value'),
     ]
 )
 
-def update_graph(analysis_or_raw1, analysis_or_raw2, dataset_type_slctd1, dataset_slctd1, start_date_slctd1, end_date_slctd1, lat_slctd1, long_slctd1,
-                 station_slctd1, variable_slctd1, dataset_type_slctd2, dataset_slctd2, start_date_slctd2, end_date_slctd2,
-                 lat_slctd2, long_slctd2, station_slctd2, variable_slctd2, anal_type_1, anal_type_2, bin_size1, scatter_size1, sma_size1, diff_size1, bin_size2, scatter_size2, sma_size2, diff_size2,
+def update_graph(analysis_or_raw1, analysis_or_raw2, dataset_type_slctd1, dataset_slctd1, forecast_slctd1, forecast_date_slctd1, ghcn_slctd1, start_date_slctd1, end_date_slctd1, lat_slctd1, long_slctd1,
+                 station_slctd1, variable_slctd1, dataset_type_slctd2, dataset_slctd2, forecast_slctd2, forecast_date_slctd2, ghcn_slctd2, start_date_slctd2, end_date_slctd2,
+                 lat_slctd2, long_slctd2, station_slctd2, variable_slctd2, anal_type_1, anal_type_2, bin_size1, scatter_size1, sma_size1, extrema_size1, diff_size1, bin_size2, scatter_size2, sma_size2, extrema_size2, diff_size2,
                  second_or_no, axis_or_no):
 
     #1st thing to do, check query completeness. if incomplete return no graph. do the same thing in the parameter update column
+    #status = QueryChecker()
+    #if status is True:
+        #input = InputQuery()
+        #return [input.plot, {'display': 'flex', "justify-content": "center", "align-items": "center"}]
+    #elif status is False:
+        #return [None, {'display': 'None']
 
-    input = InputQuery(second_or_no, dataset_type_slctd1, start_date_slctd1, end_date_slctd1, analysis_or_raw1, dataset_slctd1, lat_slctd1, long_slctd1, station_slctd1, variable_slctd1, anal_type_1, bin_size1,
-                        scatter_size1, sma_size1, analysis_or_raw2, dataset_type_slctd2, start_date_slctd2, end_date_slctd2, dataset_slctd2, lat_slctd2, long_slctd2, station_slctd2, variable_slctd2,
-                        anal_type_2, bin_size2, scatter_size2, sma_size2, axis_or_no)
+    input = InputQuery(second_or_no, dataset_type_slctd1, start_date_slctd1, end_date_slctd1, analysis_or_raw1, dataset_slctd1, forecast_slctd1, lat_slctd1, long_slctd1, station_slctd1, variable_slctd1, forecast_date_slctd1, ghcn_slctd1, anal_type_1, bin_size1,
+                        scatter_size1, sma_size1, extrema_size1, analysis_or_raw2, dataset_type_slctd2, start_date_slctd2, end_date_slctd2, dataset_slctd2, forecast_slctd2, lat_slctd2, long_slctd2, station_slctd2, variable_slctd2, forecast_date_slctd2, ghcn_slctd2,
+                        anal_type_2, bin_size2, scatter_size2, sma_size2, extrema_size2, axis_or_no)
 
-
-    return [input.plot]
+    return [input.plot, {'display': 'flex', "justify-content": "center", "align-items": "center"}]
 
 #add to above callback: if query_completeness = incomplete -> return graph display none, return container text "incomplete query". if query complete, return graph display flex + input.plot
 
