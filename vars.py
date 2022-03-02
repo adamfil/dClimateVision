@@ -24,7 +24,7 @@ VALID_DATASET_TYPES = []
 VALID_DATASET_LIST = []
 
 for set in all_dataset_types:
-    if set in ['Grid File Dataset History', 'CME Station History', 'Dutch Station History', 'GFS Forecasts']:
+    if set in ['Grid File Dataset History', 'CME Station History', 'Dutch Station History', 'GFS Forecasts', 'GHCN Dataset History']:
         VALID_DATASET_TYPES.append({'label': set, 'value': set})
         VALID_DATASET_LIST.append(set)
 #usda rma codes currently left off valid dataset types
@@ -138,7 +138,7 @@ for variable in valid_german_variables:
 # select a 1. year 2. lat/long and 3. unit
 
 #Valid Analysis Types
-valid_analysis_types = ['Histogram - sum', 'Histogram - average', 'Interval scatterplot - sum', 'Interval scatterplot - average', 'Simple Moving Average']
+valid_analysis_types = ['Histogram - sum', 'Histogram - average', 'Interval scatterplot - sum', 'Interval scatterplot - average', 'Simple Moving Average', 'Show Extrema']
 
 VALID_ANALYSIS_TYPES = []
 
