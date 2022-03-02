@@ -8,7 +8,10 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from scipy.signal import argrelextrema
 import pytz
+import plotly.io as pio
+from plotly.validators.scatter.marker import SymbolValidator
 
+pio.templates.default = "simple_white"
 
 # given a grid history dataset, a valid lat/long tuple, and an
 # authentication token, return data as series for that given lat/long
@@ -215,9 +218,11 @@ def get_single_plot(inputquery):
         go1
     )
 
+
     # Add figure title
     fig.update_layout(
-        title_text=analysis_title + dataset_title
+        title_text=analysis_title + dataset_title, title_x=0.5
+
     )
 
     # Set x-axis title
@@ -286,7 +291,7 @@ def get_double_plot(inputquery):
 
         # Add figure title
         fig.update_layout(
-            title_text='Primary: ' + analysis_title + dataset_title + ', Secondary: ' + analysis_title2 + dataset_title2
+            title_text='Primary: ' + analysis_title + dataset_title + ', Secondary: ' + analysis_title2 + dataset_title2, title_x=0.5
         )
 
         # Set x-axis title
@@ -318,7 +323,7 @@ def get_double_plot(inputquery):
 
         # Add figure title
         fig.update_layout(
-            title_text='Primary: ' + analysis_title + dataset_title + ', Secondary: ' + analysis_title2 + dataset_title2
+            title_text='Primary: ' + analysis_title + dataset_title + ', Secondary: ' + analysis_title2 + dataset_title2, title_x=0.5
         )
 
         # Set x-axis title
@@ -326,6 +331,10 @@ def get_double_plot(inputquery):
 
         # Set y-axes titles
         fig.update_yaxes(title_text='Value')
+
+        fig.update_layout(
+            font_family="Courier New",
+        )
 
 
 
@@ -388,6 +397,28 @@ def get_graph_object_and_title(dataquery, analysisquery, primary_or_secondary):
             result[str(window) + ' moving average'] = result['Value'].rolling(window=window).mean()
 
             go1 = go.Scatter(x=result['Datetime'], y=result[str(window) + ' moving average'], name=primary_or_secondary + '')
+
+        if analysisquery.anal_type in ['Show Extrema']:
+
+            result = pd.DataFrame(frame)
+
+            window = int(analysisquery.extrema_size)
+
+            result['min'] = result.iloc[argrelextrema(result.Value.values, np.less_equal,
+                                              order=window)[0]]['Value']
+            result['max'] = result.iloc[argrelextrema(result.Value.values, np.greater_equal,
+                                              order=window)[0]]['Value']
+
+            result[str(window) + ' interval extrema'] = result[['min', 'max']].max(axis=1)
+
+            raw_symbols = SymbolValidator().values
+            namestems = []
+            namevariants = []
+            symbols = []
+
+            go1 = go.Scatter(mode='markers', x=result['Datetime'], y=result[str(window) + ' interval extrema'], name='Extrema', marker_symbol=symbols,
+                             marker_line_color="midnightblue", marker_color="lightskyblue",
+                             marker_line_width=2, marker_size=9)
 
 
     return go1, title
