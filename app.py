@@ -595,6 +595,14 @@ app.layout = html.Div(
 
     html.Div([
         # plot figure
+        html.H3("Incomplete query. Fill all fields to fetch data.", id="warning", style={'fontSize': 16}),
+    ], style={
+        'display': 'flex', "justify-content": "center", "align-items": "center",
+    }
+    ),
+
+    html.Div([
+        # plot figure
         dcc.Graph(id='my_series_graph', style={'width': '90vw', 'height': '64vh', 'textAlign': 'center', "border":"1px black solid"}, figure={}),
 
     ], style={'display': 'flex', 'align-items': 'center', 'justify-content': 'center', "border":"2px white solid"}),
@@ -1111,6 +1119,105 @@ def update_daterange2(slctd_dataset_type, slctd_dataset):
 #callback to produce graph
 @app.callback(
     [
+        Output(component_id='warning', component_property='style'),
+    ],
+    [
+        Input(component_id='primary-analysis-or-raw', component_property='value'),
+        Input(component_id='secondary-analysis-or-raw', component_property='value'),
+        Input(component_id='slct-dataset-type', component_property='value'),
+        Input(component_id='datasets-to-hide', component_property='value'),
+        Input(component_id='forecasts-to-hide', component_property='value'),
+        Input(component_id='slct-forecast_date', component_property='value'),
+        Input(component_id='slct-ghcn', component_property='value'),
+        Input(component_id='lat-to-hide', component_property='value'),
+        Input(component_id='long-to-hide', component_property='value'),
+        Input(component_id='station-to-hide', component_property='value'),
+        Input(component_id='variable-to-hide', component_property='value'),
+        Input(component_id='slct-dataset-type2', component_property='value'),
+        Input(component_id='datasets-to-hide2', component_property='value'),
+        Input(component_id='forecasts-to-hide2', component_property='value'),
+        Input(component_id='slct-forecast_date2', component_property='value'),
+        Input(component_id='slct-ghcn2', component_property='value'),
+        Input(component_id='lat-to-hide2', component_property='value'),
+        Input(component_id='long-to-hide2', component_property='value'),
+        Input(component_id='station-to-hide2', component_property='value'),
+        Input(component_id='variable-to-hide2', component_property='value'),
+        Input(component_id='slct-analysis-type', component_property='value'),
+        Input(component_id='slct-analysis-type2', component_property='value'),
+        Input(component_id='slct-bin-size', component_property='value'),
+        Input(component_id='slct-scatterplot-size', component_property='value'),
+        Input(component_id='slct-sma-size', component_property='value'),
+        Input(component_id='slct-extrema-size', component_property='value'),
+        Input(component_id='slct-diff-size', component_property='value'),
+        Input(component_id='slct-bin-size2', component_property='value'),
+        Input(component_id='slct-scatterplot-size2', component_property='value'),
+        Input(component_id='slct-sma-size2', component_property='value'),
+        Input(component_id='slct-extrema-size2', component_property='value'),
+        Input(component_id='slct-diff-size2', component_property='value'),
+        Input(component_id='secondary-or-no', component_property='value'),
+        Input(component_id='axis-or-no', component_property='value'),
+        Input(component_id='primary-analysis-or-raw', component_property='style'),
+        Input(component_id='secondary-analysis-or-raw', component_property='style'),
+        Input(component_id='slct-dataset-type', component_property='style'),
+        Input(component_id='datasets-to-hide', component_property='style'),
+        Input(component_id='forecasts-to-hide', component_property='style'),
+        Input(component_id='slct-forecast_date', component_property='style'),
+        Input(component_id='slct-ghcn', component_property='style'),
+        Input(component_id='lat-to-hide', component_property='style'),
+        Input(component_id='long-to-hide', component_property='style'),
+        Input(component_id='station-to-hide', component_property='style'),
+        Input(component_id='variable-to-hide', component_property='style'),
+        Input(component_id='slct-dataset-type2', component_property='style'),
+        Input(component_id='datasets-to-hide2', component_property='style'),
+        Input(component_id='forecasts-to-hide2', component_property='style'),
+        Input(component_id='slct-forecast_date2', component_property='style'),
+        Input(component_id='slct-ghcn2', component_property='style'),
+        Input(component_id='lat-to-hide2', component_property='style'),
+        Input(component_id='long-to-hide2', component_property='style'),
+        Input(component_id='station-to-hide2', component_property='style'),
+        Input(component_id='variable-to-hide2', component_property='style'),
+        Input(component_id='slct-analysis-type', component_property='style'),
+        Input(component_id='slct-analysis-type2', component_property='style'),
+        Input(component_id='slct-bin-size', component_property='style'),
+        Input(component_id='slct-scatterplot-size', component_property='style'),
+        Input(component_id='slct-sma-size', component_property='style'),
+        Input(component_id='slct-extrema-size', component_property='style'),
+        Input(component_id='slct-diff-size', component_property='style'),
+        Input(component_id='slct-bin-size2', component_property='style'),
+        Input(component_id='slct-scatterplot-size2', component_property='style'),
+        Input(component_id='slct-sma-size2', component_property='style'),
+        Input(component_id='slct-extrema-size2', component_property='style'),
+        Input(component_id='slct-diff-size2', component_property='style'),
+    ]
+)
+def update_warning(analysis_or_raw1, analysis_or_raw2, dataset_type_slctd1, dataset_slctd1, forecast_slctd1, forecast_date_slctd1, ghcn_slctd1, lat_slctd1, long_slctd1,
+                 station_slctd1, variable_slctd1, dataset_type_slctd2, dataset_slctd2, forecast_slctd2, forecast_date_slctd2, ghcn_slctd2,
+                 lat_slctd2, long_slctd2, station_slctd2, variable_slctd2, anal_type_1, anal_type_2, bin_size1, scatter_size1, sma_size1, extrema_size1, diff_size1, bin_size2, scatter_size2, sma_size2, extrema_size2, diff_size2,
+                 second_or_no, axis_or_no, analysis_or_raw1s=None, analysis_or_raw2s=None, dataset_type_slctd1s=None, dataset_slctd1s=None, forecast_slctd1s=None, forecast_date_slctd1s=None, ghcn_slctd1s=None, lat_slctd1s=None, long_slctd1s=None,
+                 station_slctd1s=None, variable_slctd1s=None, dataset_type_slctd2s=None, dataset_slctd2s=None, forecast_slctd2s=None, forecast_date_slctd2s=None, ghcn_slctd2s=None,
+                 lat_slctd2s=None, long_slctd2s=None, station_slctd2s=None, variable_slctd2s=None, anal_type_1s=None, anal_type_2s=None, bin_size1s=None, scatter_size1s=None, sma_size1s=None, extrema_size1s=None, diff_size1s=None, bin_size2s=None, scatter_size2s=None, sma_size2s=None, extrema_size2s=None, diff_size2s=None):
+
+    values = [analysis_or_raw1, analysis_or_raw2, dataset_type_slctd1, dataset_slctd1, forecast_slctd1, forecast_date_slctd1, ghcn_slctd1, lat_slctd1, long_slctd1,
+                 station_slctd1, variable_slctd1, dataset_type_slctd2, dataset_slctd2, forecast_slctd2, forecast_date_slctd2, ghcn_slctd2,
+                 lat_slctd2, long_slctd2, station_slctd2, variable_slctd2, anal_type_1, anal_type_2, bin_size1, scatter_size1, sma_size1, extrema_size1, diff_size1, bin_size2, scatter_size2, sma_size2, extrema_size2, diff_size2]
+
+    styles = [analysis_or_raw1s, analysis_or_raw2s, dataset_type_slctd1s, dataset_slctd1s, forecast_slctd1s, forecast_date_slctd1s, ghcn_slctd1s, lat_slctd1s, long_slctd1s,
+                 station_slctd1s, variable_slctd1s, dataset_type_slctd2s, dataset_slctd2s, forecast_slctd2s, forecast_date_slctd2s, ghcn_slctd2s,
+                 lat_slctd2s, long_slctd2s, station_slctd2s, variable_slctd2s, anal_type_1s, anal_type_2s, bin_size1s, scatter_size1s, sma_size1s, extrema_size1s, diff_size1s, bin_size2s, scatter_size2s, sma_size2s, extrema_size2s, diff_size2s]
+
+    for i in range(len(values)):
+        if styles[i] in [{'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'width': '340px'}]:
+            if values[i] in [None, '']:
+                return [{'display': 'flex', "justify-content": "center", "align-items": "center", "font-size": "16px"}]
+            else:
+                pass
+        else:
+            pass
+    return [{'display': 'none'}]
+
+#callback to produce graph
+@app.callback(
+    [
         Output(component_id='my_series_graph', component_property='figure'),
         Output(component_id='my_series_graph', component_property='style')
     ],
@@ -1176,6 +1283,8 @@ def update_graph(analysis_or_raw1, analysis_or_raw2, dataset_type_slctd1, datase
     return [input.plot, {'display': 'flex', "justify-content": "center", "align-items": "center"}]
 
 #add to above callback: if query_completeness = incomplete -> return graph display none, return container text "incomplete query". if query complete, return graph display flex + input.plot
+
+
 
 if __name__ == '__main__':
     app.run_server(debug=False)
