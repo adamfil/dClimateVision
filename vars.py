@@ -23,9 +23,10 @@ VALID_DATASET_TYPES = []
 
 VALID_DATASET_LIST = []
 
-for set in ['Grid File Dataset History', 'CME Station History', 'Dutch Station History', 'GFS Forecasts', 'GHCN Dataset History']:
-    VALID_DATASET_TYPES.append({'label': set, 'value': set})
-    VALID_DATASET_LIST.append(set)
+for set in all_dataset_types:
+    if set in ['Grid File Dataset History', 'CME Station History', 'Dutch Station History', 'GFS Forecasts', 'GHCN Dataset History']:
+        VALID_DATASET_TYPES.append({'label': set, 'value': set})
+        VALID_DATASET_LIST.append(set)
 #usda rma codes currently left off valid dataset types
 
 #'Grid File Dataset History', \
@@ -161,4 +162,3 @@ VALID_DIFF_INTERVALS = [{'label': 'Last observation', 'value': 'Last observation
 
 # to do:
 #add seondaxisorno as var
-
