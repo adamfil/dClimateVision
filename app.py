@@ -36,9 +36,10 @@ app.layout = html.Div(
         "color": "white",
         "display": "flex",
         "justify-content": "center",
-        "align-items": "center",
+        "align-items": "top",
         "min-height" : "100vh",
         "font-size": "16px",
+        "padding": "12px"
     },
 
     children=[
