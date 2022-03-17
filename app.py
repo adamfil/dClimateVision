@@ -10,7 +10,7 @@ from vars import VALID_GRIDFILE_DASHSET
 from vars import VALID_GFS_DASHSET
 from vars import VALID_DUTCH_STATIONS, VALID_DUTCH_VARIABLES
 from vars import VALID_CME_STATIONS, VALID_CME_VARIABLES
-from vars import VALID_GHCN_STATIONS
+from vars import VALID_GHCN_VARIABLES
 from vars import TOKEN
 from vars import VALID_ANALYSIS_TYPES, VALID_HISTOGRAM_BINS, VALID_SCATTERPLOT_INTERVALS, VALID_DIFF_INTERVALS
 import helper
@@ -192,7 +192,7 @@ app.layout = html.Div(
             id='daterange-to-hide',
             min_date_allowed=datetime(1980, 1, 1),
             max_date_allowed=datetime.today(),
-            start_date=datetime(2000, 1, 1),
+            start_date=None,
             end_date=datetime.today()
 
         ),
@@ -455,7 +455,7 @@ app.layout = html.Div(
             id='daterange-to-hide2',
             min_date_allowed=datetime(1980, 1, 1),
             max_date_allowed=datetime.today(),
-            start_date=datetime(2000, 1, 1),
+            start_date=None,
             end_date=datetime.today()
 
         ),
@@ -612,7 +612,7 @@ app.layout = html.Div(
         # plot figure
         html.A("github.com/adamfil/dclimateviz", href='https://github.com/adamfil/dclimateviz'),
         ], style={
-            'display': 'flex', "justify-content": "center", "align-items": "center",
+            'display': 'flex', "justify-content": "center", "align-items": "center"
         }
     ),
 
@@ -1065,8 +1065,8 @@ def update_latlong2(dataset_slctd):
         Output(component_id='daterange-to-hide', component_property='end_date'),
     ],
     [
-        Input(component_id='slct-dataset-type2', component_property='value'),
-        Input(component_id='datasets-to-hide2', component_property='value'),
+        Input(component_id='slct-dataset-type', component_property='value'),
+        Input(component_id='datasets-to-hide', component_property='value'),
     ]
 )
 
@@ -1082,7 +1082,7 @@ def update_daterange1(slctd_dataset_type, slctd_dataset):
 
     if slctd_dataset_type in ['Dutch Station History', 'CME Station History', 'German Station History', 'GHCN Dataset History']:
 
-        return datetime(2000, 1, 1), datetime.today(), datetime(2000, 1, 1), datetime.today()
+        return None, datetime.today(), None, datetime.today()
 
     else:
         pass
@@ -1112,7 +1112,7 @@ def update_daterange2(slctd_dataset_type, slctd_dataset):
 
     if slctd_dataset_type in ['Dutch Station History', 'CME Station History', 'German Station History', 'GHCN Dataset History']:
 
-        return datetime(2000, 1, 1), datetime.today(), datetime(2000, 1, 1), datetime.today()
+        return None, datetime.today(), None, datetime.today()
 
     else:
         pass
