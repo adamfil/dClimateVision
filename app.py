@@ -49,7 +49,7 @@ app.layout = html.Div(
     children=[
 
     # title
-    html.H1("dClimateViz", style={
+    html.H1("dClimateVision", style={
         "text-align": "center",
         'fontSize': 42,
     }),
@@ -610,7 +610,7 @@ app.layout = html.Div(
 
     html.Div([
         # plot figure
-        html.A("github.com/adamfil/dclimateviz", href='https://github.com/adamfil/dclimateviz'),
+        html.A("github.com/adamfil/dclimatevision", href='https://github.com/adamfil/dclimatevision'),
         ], style={
             'display': 'flex', "justify-content": "center", "align-items": "center"
         }
