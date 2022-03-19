@@ -31,7 +31,7 @@ app.layout = html.Div(
 
     style={
         #"background-image": "url('assets/greenbrier2.jpg')",
-        "background-color": "#666666",
+        "background-color": "#52527a",
         "background-size": "100%",
         "color": "white",
         "display": "flex",
