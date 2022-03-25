@@ -8,4 +8,4 @@ This is a web application for visualizing data from the dClimate free API. The a
 
 ## Sequence Diagram
 
-![dclimateviz0 drawio (1) (1)](https://user-images.githubusercontent.com/82415896/158709449-13590564-ff40-40d7-921d-f9803ad4f34c.png)
+![dclimatevision seq drawio](https://user-images.githubusercontent.com/82415896/160207502-31edaa56-e6a4-4d8e-91ca-f9215fd6adf3.png)
