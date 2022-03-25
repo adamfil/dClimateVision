@@ -69,7 +69,7 @@ def get_gfs_frame(lat_slctd, long_slctd, dataset_slctd, start_date_slctd, end_da
     latlong = (lat_slctd, long_slctd)
     data_pulled = get_gfs_series_snapped(dataset_slctd, latlong, TOKEN, forecast_date)
     #dff = trim_series(data_pulled[1], start_date_slctd, end_date_slctd)
-    dff = data_pulled
+    dff = data_pulled[1]
 
     snapped_lat = str(data_pulled[0][0])
     snapped_long = str(data_pulled[0][1])
