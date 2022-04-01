@@ -232,7 +232,7 @@ def get_single_plot(inputquery):
     fig.update_yaxes(title_text='Value')
 
     fig.update_layout(
-        font_family="Trebuchet MS",
+        font_family="Montserrat",
     )
 
     return fig
@@ -301,7 +301,7 @@ def get_double_plot(inputquery):
         fig.update_yaxes(title_text='Value')
 
         fig.update_layout(
-            font_family="Trebuchet MS",
+            font_family="Montserrat",
         )
 
 
@@ -333,7 +333,7 @@ def get_double_plot(inputquery):
         fig.update_yaxes(title_text='Value')
 
         fig.update_layout(
-            font_family="Trebuchet MS",
+            font_family="Montserrat",
         )
 
 
