@@ -4,7 +4,7 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 from vars import VALID_DATASET_TYPES
 from vars import VALID_GRIDFILE_DASHSET
 from vars import VALID_GFS_DASHSET
@@ -601,6 +601,23 @@ app.layout = html.Div(
         'display': 'flex', "justify-content": "center", "align-items": "center",
     }
     ),
+
+    html.Div([
+        html.Button(id='submit-button-state', n_clicks=0, children='Get data plot', style={"background-color": "#ffffff", "font-size": "16px", "padding": "6px 16px"}),
+    ], style={
+        'display': 'flex', "justify-content": "center", "align-items": "center",
+    }),
+
+    html.Div([
+        dcc.Loading(
+            id="loading-1",
+            type="default",
+            children=html.Div(id="loading-output-1"),
+            fullscreen=True,
+            color="#119DFF",
+            style={"background-color": "#002451"}
+        ),
+    ]),
 
     html.Div([
         # plot figure
@@ -1216,55 +1233,55 @@ def update_warning(analysis_or_raw1, analysis_or_raw2, dataset_type_slctd1, data
             pass
     return [{'display': 'none'}]
 
-#callback to produce graph
+
 @app.callback(
     [
         Output(component_id='my_series_graph', component_property='figure'),
-        Output(component_id='my_series_graph', component_property='style')
+        Output(component_id = "loading-output-1", component_property="children"),
     ],
-    [
-        Input(component_id='primary-analysis-or-raw', component_property='value'),
-        Input(component_id='secondary-analysis-or-raw', component_property='value'),
-        Input(component_id='slct-dataset-type', component_property='value'),
-        Input(component_id='datasets-to-hide', component_property='value'),
-        Input(component_id='forecasts-to-hide', component_property='value'),
-        Input(component_id='slct-forecast_date', component_property='value'),
-        Input(component_id='slct-ghcn', component_property='value'),
-        Input(component_id='daterange-to-hide', component_property='start_date'),
-        Input(component_id='daterange-to-hide', component_property='end_date'),
-        Input(component_id='lat-to-hide', component_property='value'),
-        Input(component_id='long-to-hide', component_property='value'),
-        Input(component_id='station-to-hide', component_property='value'),
-        Input(component_id='variable-to-hide', component_property='value'),
-        Input(component_id='slct-dataset-type2', component_property='value'),
-        Input(component_id='datasets-to-hide2', component_property='value'),
-        Input(component_id='forecasts-to-hide2', component_property='value'),
-        Input(component_id='slct-forecast_date2', component_property='value'),
-        Input(component_id='slct-ghcn2', component_property='value'),
-        Input(component_id='daterange-to-hide2', component_property='start_date'),
-        Input(component_id='daterange-to-hide2', component_property='end_date'),
-        Input(component_id='lat-to-hide2', component_property='value'),
-        Input(component_id='long-to-hide2', component_property='value'),
-        Input(component_id='station-to-hide2', component_property='value'),
-        Input(component_id='variable-to-hide2', component_property='value'),
-        Input(component_id='slct-analysis-type', component_property='value'),
-        Input(component_id='slct-analysis-type2', component_property='value'),
-        Input(component_id='slct-bin-size', component_property='value'),
-        Input(component_id='slct-scatterplot-size', component_property='value'),
-        Input(component_id='slct-sma-size', component_property='value'),
-        Input(component_id='slct-extrema-size', component_property='value'),
-        Input(component_id='slct-diff-size', component_property='value'),
-        Input(component_id='slct-bin-size2', component_property='value'),
-        Input(component_id='slct-scatterplot-size2', component_property='value'),
-        Input(component_id='slct-sma-size2', component_property='value'),
-        Input(component_id='slct-extrema-size2', component_property='value'),
-        Input(component_id='slct-diff-size2', component_property='value'),
-        Input(component_id='secondary-or-no', component_property='value'),
-        Input(component_id='axis-or-no', component_property='value'),
-    ]
-)
+        [
+        Input('submit-button-state', 'n_clicks'),
+        State(component_id='primary-analysis-or-raw', component_property='value'),
+        State(component_id='secondary-analysis-or-raw', component_property='value'),
+        State(component_id='slct-dataset-type', component_property='value'),
+        State(component_id='datasets-to-hide', component_property='value'),
+        State(component_id='forecasts-to-hide', component_property='value'),
+        State(component_id='slct-forecast_date', component_property='value'),
+        State(component_id='slct-ghcn', component_property='value'),
+        State(component_id='daterange-to-hide', component_property='start_date'),
+        State(component_id='daterange-to-hide', component_property='end_date'),
+        State(component_id='lat-to-hide', component_property='value'),
+        State(component_id='long-to-hide', component_property='value'),
+        State(component_id='station-to-hide', component_property='value'),
+        State(component_id='variable-to-hide', component_property='value'),
+        State(component_id='slct-dataset-type2', component_property='value'),
+        State(component_id='datasets-to-hide2', component_property='value'),
+        State(component_id='forecasts-to-hide2', component_property='value'),
+        State(component_id='slct-forecast_date2', component_property='value'),
+        State(component_id='slct-ghcn2', component_property='value'),
+        State(component_id='daterange-to-hide2', component_property='start_date'),
+        State(component_id='daterange-to-hide2', component_property='end_date'),
+        State(component_id='lat-to-hide2', component_property='value'),
+        State(component_id='long-to-hide2', component_property='value'),
+        State(component_id='station-to-hide2', component_property='value'),
+        State(component_id='variable-to-hide2', component_property='value'),
+        State(component_id='slct-analysis-type', component_property='value'),
+        State(component_id='slct-analysis-type2', component_property='value'),
+        State(component_id='slct-bin-size', component_property='value'),
+        State(component_id='slct-scatterplot-size', component_property='value'),
+        State(component_id='slct-sma-size', component_property='value'),
+        State(component_id='slct-extrema-size', component_property='value'),
+        State(component_id='slct-diff-size', component_property='value'),
+        State(component_id='slct-bin-size2', component_property='value'),
+        State(component_id='slct-scatterplot-size2', component_property='value'),
+        State(component_id='slct-sma-size2', component_property='value'),
+        State(component_id='slct-extrema-size2', component_property='value'),
+        State(component_id='slct-diff-size2', component_property='value'),
+        State(component_id='secondary-or-no', component_property='value'),
+        State(component_id='axis-or-no', component_property='value'),
+    ])
 
-def update_graph(analysis_or_raw1, analysis_or_raw2, dataset_type_slctd1, dataset_slctd1, forecast_slctd1, forecast_date_slctd1, ghcn_slctd1, start_date_slctd1, end_date_slctd1, lat_slctd1, long_slctd1,
+def update_graph(n_clicks, analysis_or_raw1, analysis_or_raw2, dataset_type_slctd1, dataset_slctd1, forecast_slctd1, forecast_date_slctd1, ghcn_slctd1, start_date_slctd1, end_date_slctd1, lat_slctd1, long_slctd1,
                  station_slctd1, variable_slctd1, dataset_type_slctd2, dataset_slctd2, forecast_slctd2, forecast_date_slctd2, ghcn_slctd2, start_date_slctd2, end_date_slctd2,
                  lat_slctd2, long_slctd2, station_slctd2, variable_slctd2, anal_type_1, anal_type_2, bin_size1, scatter_size1, sma_size1, extrema_size1, diff_size1, bin_size2, scatter_size2, sma_size2, extrema_size2, diff_size2,
                  second_or_no, axis_or_no):
@@ -1281,7 +1298,7 @@ def update_graph(analysis_or_raw1, analysis_or_raw2, dataset_type_slctd1, datase
                         scatter_size1, sma_size1, extrema_size1, analysis_or_raw2, dataset_type_slctd2, start_date_slctd2, end_date_slctd2, dataset_slctd2, forecast_slctd2, lat_slctd2, long_slctd2, station_slctd2, variable_slctd2, forecast_date_slctd2, ghcn_slctd2,
                         anal_type_2, bin_size2, scatter_size2, sma_size2, extrema_size2, axis_or_no)
 
-    return [input.plot, {'display': 'flex', "justify-content": "center", "align-items": "center"}]
+    return [input.plot, ""]
 
 #add to above callback: if query_completeness = incomplete -> return graph display none, return container text "incomplete query". if query complete, return graph display flex + input.plot
 

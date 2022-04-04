@@ -12,6 +12,7 @@ import plotly.io as pio
 from plotly.validators.scatter.marker import SymbolValidator
 
 pio.templates.default = "simple_white"
+font = "Arial, Helvetica, sans-serif"
 
 # given a grid history dataset, a valid lat/long tuple, and an
 # authentication token, return data as series for that given lat/long
@@ -232,7 +233,7 @@ def get_single_plot(inputquery):
     fig.update_yaxes(title_text='Value')
 
     fig.update_layout(
-        font_family="Montserrat",
+        font_family=font,
     )
 
     return fig
@@ -301,7 +302,7 @@ def get_double_plot(inputquery):
         fig.update_yaxes(title_text='Value')
 
         fig.update_layout(
-            font_family="Montserrat",
+            font_family=font,
         )
 
 
@@ -333,7 +334,7 @@ def get_double_plot(inputquery):
         fig.update_yaxes(title_text='Value')
 
         fig.update_layout(
-            font_family="Montserrat",
+            font_family=font,
         )
 
 
