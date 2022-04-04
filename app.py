@@ -190,7 +190,7 @@ app.layout = html.Div(
         # Create element to hide/show, in this case an 'Input Component'
         dcc.DatePickerRange(
             id='daterange-to-hide',
-            min_date_allowed=datetime(1980, 1, 1),
+            min_date_allowed=None,
             max_date_allowed=datetime.today(),
             start_date=None,
             end_date=datetime.today()
@@ -596,14 +596,14 @@ app.layout = html.Div(
 
     html.Div([
         # plot figure
-        html.H3("Incomplete query. Fill all fields to fetch data.", id="warning", style={'fontSize': 16}),
+        html.H3("Incomplete query. Fill all fields to get plot.", id="warning", style={'fontSize': 16}),
     ], style={
         'display': 'flex', "justify-content": "center", "align-items": "center",
     }
     ),
 
     html.Div([
-        html.Button(id='submit-button-state', n_clicks=0, children='Get data plot', style={"background-color": "#ffffff", "font-size": "16px", "padding": "6px 16px"}),
+        html.Button(id='submit-button-state', n_clicks=0, children='Get plot', style={"background-color": "#ffffff", "font-size": "16px", "padding": "6px 16px"}),
     ], style={
         'display': 'flex', "justify-content": "center", "align-items": "center",
     }),
@@ -614,7 +614,7 @@ app.layout = html.Div(
             type="default",
             children=html.Div(id="loading-output-1"),
             fullscreen=True,
-            color="#119DFF",
+            color="#c6ceff",
             style={"background-color": "#002451"}
         ),
     ]),
@@ -1138,6 +1138,7 @@ def update_daterange2(slctd_dataset_type, slctd_dataset):
 @app.callback(
     [
         Output(component_id='warning', component_property='style'),
+        Output(component_id='submit-button-state', component_property='style'),
     ],
     [
         Input(component_id='primary-analysis-or-raw', component_property='value'),
@@ -1226,12 +1227,12 @@ def update_warning(analysis_or_raw1, analysis_or_raw2, dataset_type_slctd1, data
     for i in range(len(values)):
         if styles[i] in [{'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'width': '340px'}]:
             if values[i] in [None, '']:
-                return [{'display': 'flex', "justify-content": "center", "align-items": "center", "font-size": "16px"}]
+                return [{'display': 'flex', "justify-content": "center", "align-items": "center", "font-size": "16px"}, {'display': 'none'}]
             else:
                 pass
         else:
             pass
-    return [{'display': 'none'}]
+    return [{'display': 'none'}, {"background-color": "#ffffff", "font-size": "16px", "padding": "6px 16px"}]
 
 
 @app.callback(
