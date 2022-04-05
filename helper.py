@@ -11,7 +11,13 @@ import pytz
 import plotly.io as pio
 from plotly.validators.scatter.marker import SymbolValidator
 
-pio.templates.default = "simple_white"
+pio.templates["redblue"] = go.layout.Template(
+    layout=go.Layout(
+        colorway=['#438cd6', '#d25656']
+    )
+)
+pio.templates.default = 'simple_white+redblue'
+
 font = "Arial, Helvetica, sans-serif"
 
 # given a grid history dataset, a valid lat/long tuple, and an

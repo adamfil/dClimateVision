@@ -603,7 +603,7 @@ app.layout = html.Div(
     ),
 
     html.Div([
-        html.Button(id='submit-button-state', n_clicks=0, children='Get plot', style={"background-color": "#ffffff", "font-size": "16px", "padding": "6px 16px"}),
+        html.Button(id='submit-button-state', n_clicks=0, children='Get plot', style={"background-color": "#ffffff", "font-size": "16px", "padding": "6px 16px", "border-radius": "8px"}),
     ], style={
         'display': 'flex', "justify-content": "center", "align-items": "center",
     }),
@@ -1232,7 +1232,7 @@ def update_warning(analysis_or_raw1, analysis_or_raw2, dataset_type_slctd1, data
                 pass
         else:
             pass
-    return [{'display': 'none'}, {"background-color": "#ffffff", "font-size": "16px", "padding": "6px 16px"}]
+    return [{'display': 'none'}, {"background-color": "#ffffff", "font-size": "16px", "padding": "6px 16px", "border-radius": "8px"}]
 
 
 @app.callback(
