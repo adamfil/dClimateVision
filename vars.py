@@ -28,7 +28,7 @@ all_dataset_types = ['Grid File Dataset History', 'GFS Forecasts', 'GHCN Dataset
 #creating a LIST and a DICT-LIST for the subset of datasets which we want to be available in our app.
 VALID_DATASET_TYPES = []
 VALID_DATASET_LIST = []
-for set in ['Grid File Dataset History', 'CME Station History', 'Dutch Station History', 'GFS Forecasts', 'GHCN Dataset History']:
+for set in ['CME Station History', 'Dutch Station History', 'GFS Forecasts', 'GHCN Dataset History', 'Grid File Dataset History']:
     VALID_DATASET_TYPES.append({'label': set, 'value': set})
     VALID_DATASET_LIST.append(set)
 
