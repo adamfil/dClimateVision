@@ -735,7 +735,7 @@ def update_statvariable_input_primary(slctd_dataset_type):
     if slctd_dataset_type in ['Dutch Station History']:
         return [VALID_DUTCH_STATIONS, VALID_DUTCH_VARIABLES]
     if slctd_dataset_type in ['GHCN Dataset History']:
-        return [VALID_GHCN_STATIONS, VALID_GHCN_VARIABLES]
+        return [VALID_GHCN_VARIABLES, VALID_GHCN_VARIABLES]
     if slctd_dataset_type in ['CME Station History']:
         return [VALID_CME_STATIONS, VALID_CME_VARIABLES]
     if slctd_dataset_type in ['German Station History']:
@@ -1006,7 +1006,7 @@ def update_statvariable_input_secondary(slctd_dataset_type):
     if slctd_dataset_type in ['Dutch Station History']:
         return [VALID_DUTCH_STATIONS, VALID_DUTCH_VARIABLES]
     if slctd_dataset_type in ['GHCN Dataset History']:
-        return [VALID_GHCN_STATIONS, VALID_GHCN_VARIABLES]
+        return [VALID_GHCN_VARIABLES, VALID_GHCN_VARIABLES]
     if slctd_dataset_type in ['CME Station History']:
         return [VALID_CME_STATIONS, VALID_CME_VARIABLES]
     if slctd_dataset_type in ['German Station History']:
