@@ -49,7 +49,7 @@ app.layout = html.Div(
     children=[
 
     # title
-    html.H1("dClimateVision", style={
+    html.H1("Timeseries Visualizer", style={
         "text-align": "center",
         'fontSize': 42,
     }),
@@ -627,7 +627,7 @@ app.layout = html.Div(
 
     html.Div([
         # plot figure
-        html.A("github.com/adamfil/dclimatevision", href='https://github.com/adamfil/dclimatevision'),
+        html.A("github.com/adamfil/dclimatevision", href='https://github.com/adamfil/dclimatevision', target="_blank"),
         ], style={
             'display': 'flex', "justify-content": "center", "align-items": "center"
         }
